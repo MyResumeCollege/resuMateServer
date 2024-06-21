@@ -1,13 +1,13 @@
 import express from "express";
-import cvUploaderController from "../controllers/CvUploader.controller"
-import upload from '../middlewares/multerConfig';
+import cvUploaderController from "../controllers/cvUploader.controller";
+import upload from "../middlewares/multerConfig";
 
 const router = express.Router();
 
 router.post(
-  "/upload-cv",
-  upload.single('file'),
-  cvUploaderController.convertPdfToText
+  "/upload-resume",
+  upload.single("file"),
+  cvUploaderController.generateResumeFromExistCV
 );
 
 export default router;
