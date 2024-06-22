@@ -11,9 +11,9 @@ const generateResumeFromExistCV = async (req: Request, res: Response) => {
     const { buffer } = req.file;
     const data = await PDFParser(buffer);
 
-    const processedText = await generateResume({ detailedCV: data.text });
+    const CVUploadResponse = await generateResume({ detailedCV: data.text });
 
-    res.json({ processedText });
+    res.json({ CVTextContent: CVUploadResponse });
   } catch (err) {
     console.error("Error uploading file:", err);
     res.status(500).send("Error uploading file.");
