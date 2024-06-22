@@ -3,7 +3,7 @@ import linkedinController from "../controllers/linkedin.controller";
 
 const router = express.Router();
 
-router.get(
+router.post(
   "/profile-data",
   linkedinController.fetchLinkedinProfileData
 );
