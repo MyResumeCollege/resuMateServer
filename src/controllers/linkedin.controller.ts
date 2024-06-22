@@ -11,10 +11,34 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
   try {
     const data = await getLinkedinProfileData(profile_link);
 
-    const { name, location, aboutSummaryText: summary, description: role, education, skills, experience } = data;
+    const {
+      name,
+      location,
+      aboutSummaryText: summary,
+      description: role,
+      education,
+      skills,
+      experience,
+    } = data;
 
-    const formattedExperience = experience.map(exp => `${exp.title} at ${exp.organisation.name} in ${exp.location}`);
-    const formattedEducation = education.map(edu => `${edu.institutionName}, ${edu.fieldOfStudy}`);
+    const formattedExperience: string[] = experience.map((exp) => {
+      const expTitle = exp.title || "";
+      const expOrgName = exp.organisation?.name || "";
+      const expLocation = exp.location || "";
+
+      return [expTitle, expOrgName, expLocation].filter(Boolean).join(" at ");
+    });
+
+    const formattedEducation: string[] = education
+      .map((edu) => {
+        const eduInstitution = edu.institutionName || "";
+        const eduFieldOfStudy = edu.fieldOfStudy || "";
+
+        return eduInstitution && eduFieldOfStudy
+          ? `${eduInstitution}, ${eduFieldOfStudy}`
+          : eduInstitution || eduFieldOfStudy;
+      })
+      .filter(Boolean);
 
     const userLinkedinData = {
       name,
