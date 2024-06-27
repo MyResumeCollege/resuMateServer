@@ -34,7 +34,7 @@ const generateResume = async ({
       requestMessages = [
         {
           role: 'user',
-          content: `Translate this resume into :`,
+          content: `Translate this resume into ${resumeLanguage}:`,
         },
         {
           role: 'assistant',
