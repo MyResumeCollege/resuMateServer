@@ -1,35 +1,36 @@
 import Groq from "groq-sdk";
-import { generateResumePrompt, improveResumePrompt } from "../prompts/resumePrompts";
+import {
+  generateResumePrompt,
+  improveResumePrompt,
+} from "../prompts/resumePrompts";
 
-interface ResumeParams {
+type ResumeData = {
   detailedCV: string;
-}
+};
 
-interface ResumeQuestionsParam {
+type ResumeQuestionsData = {
   name: string;
   job: string;
   description: string;
-  goals: string;
-}
+  skills: Skill[];
+};
 const maxCharacterLimit = 1000;
 
-const improveResume = async ({
-  detailedCV,
-}: ResumeParams) => {
+const improveResume = async ({ detailedCV }: ResumeData) => {
   try {
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
     let requestMessages: Groq.Chat.Completions.ChatCompletionMessageParam[];
-      requestMessages = [
-        {
-          role: "user",
-          content: improveResumePrompt,
-        },
-        {
-          role: "assistant",
-          content: detailedCV,
-        },
-      ];
-    
+    requestMessages = [
+      {
+        role: "user",
+        content: improveResumePrompt,
+      },
+      {
+        role: "assistant",
+        content: detailedCV,
+      },
+    ];
+
     const response = await groq.chat.completions.create({
       model: "llama3-8b-8192",
       messages: requestMessages,
@@ -49,12 +50,12 @@ const improveResume = async ({
   }
 };
 
-const generateResume =  async ({
+const generateResume = async ({
   name,
   job,
   description,
-  goals
-}: ResumeQuestionsParam) => {
+  skills,
+}: ResumeQuestionsData) => {
   try {
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
     let requestMessages: Groq.Chat.Completions.ChatCompletionMessageParam[];
@@ -67,21 +68,20 @@ const generateResume =  async ({
     ${description}
 
     [Career Goals/Objectives]:
-    ${goals}
-
+    ${skills.map((skill) => `${skill.name} - ${skill.level}`).join("\n")}
     `.trim();
 
     requestMessages = [
       {
         role: "user",
-        content: generateResumePrompt({name, job, description, goals}),
+        content: generateResumePrompt({ name, job, description, skills }),
       },
       {
         role: "assistant",
         content: resumeContent,
       },
-    ]
-    
+    ];
+
     const response = await groq.chat.completions.create({
       model: "llama3-8b-8192",
       messages: requestMessages,
@@ -99,6 +99,6 @@ const generateResume =  async ({
     console.error("Error generating resume:", error);
     throw error;
   }
-}
+};
 
 export { improveResume, generateResume };
