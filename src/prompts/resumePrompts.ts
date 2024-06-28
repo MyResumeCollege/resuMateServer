@@ -1,20 +1,28 @@
-interface ResumePromptParams {
+type ResumePromptParams = {
     name: string;
     job: string;
     description: string;
-    goals: string;
+    skills: Skill[];
   }
 
-export const generateResumePrompt = ({ name, job, description, goals }: ResumePromptParams) => `
-    generate a resume based solely on the provided information without adding additional details:
+  const SKILL_LEVEL_NAME: Record<number, string> = {
+    1: 'Novice',
+    2: 'Beginner',
+    3: 'Skillful',
+    4: 'Experienced',
+    5: 'Expert'
+}
+
+export const generateResumePrompt = ({ name, job, description, skills }: ResumePromptParams) => `
+    generate a resume based solely on the provided information without adding additional details.
     [Name]: ${name}
     [Job Title/Desired Position]: ${job}
 
     [Professional Summary]:
     ${description}
 
-    [Career Goals/Objectives]:
-    ${goals}
+    [Skills]:
+    ${skills.map(skill => `${skill.name}: ${SKILL_LEVEL_NAME[skill.level]}`).join('\n')}
 `.trim();
 
 export const improveResumePrompt = `
