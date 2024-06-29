@@ -7,7 +7,7 @@ const generateResumeFromScratch = async (req: Request, res: Response) => {
       name,
       job,
       description,
-      skills,
+      skills
     })
     res.status(200).json({ CVTextContent: CVUploadResponse })
   } catch (err) {
