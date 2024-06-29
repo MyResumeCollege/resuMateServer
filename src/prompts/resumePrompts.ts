@@ -15,6 +15,7 @@ type ResumePromptParams = {
 
 export const generateResumePrompt = ({ name, job, description, skills }: ResumePromptParams) => `
     generate a resume based solely on the provided information without adding additional details.
+    Please don't add an intro line : 'Here is the generated..'
     [Name]: ${name}
     [Job Title/Desired Position]: ${job}
 
@@ -26,10 +27,10 @@ export const generateResumePrompt = ({ name, job, description, skills }: ResumeP
 `.trim();
 
 export const improveResumePrompt = `
-    Improve the following resume by making it more concise, highlighting relevant skills and experience, and adding industry-specific keywords. 
-    Ensure the resume is professionally formatted, clear, and limited to one page. Do not include any images.
-    Use the template provided, but ignore any sections for which no information is given. Provide only the updated CV. 
-    Please make sure your response is without an introduction sentence 'Here is the revised resume'.
+    generate a resume based solely on the provided information without adding additional details.
+    Ensure the resume is professionally formatted, clear.
+    Use the template provided, but ignore any sections for which no information is given.
+    please dont add introduction - AS 'Here is the rewritten resume' or 'Here is the resume:'
 
     [Name]: [Insert name here]
     [Job Title/Desired Position]: [Specify desired job title or position]
