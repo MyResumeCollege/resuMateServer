@@ -1,11 +1,11 @@
-import mongoose from 'mongoose'
+import mongoose, { Document } from "mongoose";
 
-export type User = {
-  _id?: mongoose.Schema.Types.ObjectId
+export interface IUser extends Document {
+  _id: mongoose.Types.ObjectId;
   name: string
   email: string
   password: string
   image?: string
   isPremium: boolean
-  refreshTokens?: string[]
+  refreshTokens?: string[];
 }
