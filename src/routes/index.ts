@@ -1,13 +1,13 @@
-import { Router } from 'express'
-import CvUploader from './cvUploader'
-import CvGenerator from './cvGenerator'
-import linkedinProfile from './linkedinData'
-import LoginRouter from './login'
+import { Router } from "express";
+import CvUploader from "./cvUploader";
+import CvGenerator from "./cvGenerator";
+import linkedinProfile from "./linkedinData";
+import authRoute from "./auth";
 
-const baseRouter = Router()
+const baseRouter = Router();
 
-baseRouter.use('/cv', CvUploader, CvGenerator)
-baseRouter.use('/linkedin', linkedinProfile)
-baseRouter.use('/login', LoginRouter)
+baseRouter.use("/cv", CvUploader, CvGenerator);
+baseRouter.use("/linkedin", linkedinProfile);
+baseRouter.use("/auth", authRoute);
 
-export default baseRouter
+export default baseRouter;
