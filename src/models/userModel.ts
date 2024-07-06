@@ -1,35 +1,38 @@
-import mongoose from "mongoose";
-import { IUser } from "../types/user.type";
+import mongoose from 'mongoose'
+import { IUser } from '../types/user.type'
 
 const userSchema = new mongoose.Schema<IUser>({
-  name: { 
-    type: String, 
-    required: true 
+  name: {
+    type: String,
+    required: true,
   },
-  email: { 
+  email: {
     type: String,
     required: true,
     unique: true,
-    lowercase: true 
-   },
-  password: { 
-    type: String,
-    required: false 
+    lowercase: true,
+    isEmail: true,
   },
-  image: { 
+  password: {
     type: String,
-    required: false 
+    required: false,
   },
-  isPremium: { 
+  image: {
+    type: String,
+    required: false,
+  },
+  isPremium: {
     type: Boolean,
     required: true,
-    default: false 
+    default: false,
   },
-  refreshTokens: [{ 
-    type: [String],
-  }],
-});
+  refreshTokens: [
+    {
+      type: [String],
+    },
+  ],
+})
 
-const UserModel = mongoose.model<IUser>("User", userSchema);
+const UserModel = mongoose.model<IUser>('User', userSchema)
 
 export default UserModel
