@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import PDFParser from 'pdf-parse'
-import { generateResume } from '../services/GroqAI.service'
+import { improveResume } from '../services/GroqAI.service'
 
 const generateResumeFromExistCV = async (req: Request, res: Response) => {
   try {
@@ -11,7 +11,7 @@ const generateResumeFromExistCV = async (req: Request, res: Response) => {
     const { buffer } = req.file
     const data = await PDFParser(buffer)
 
-    const CVUploadResponse = await generateResume({ detailedCV: data.text })
+    const CVUploadResponse = await improveResume({ detailedCV: data.text })
 
     res.json({ CVTextContent: CVUploadResponse })
   } catch (err) {

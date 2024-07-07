@@ -7,7 +7,6 @@ export const getLinkedinProfileData = async (profileLink: string) => {
         'Authorization': `${process.env.LINKEDIN_API_KEY}`
       };
 
-    const API_KEY = process.env.LINKEDIN_API_KEY;
     const response = await axios.get("https://api.lix-it.com/v1/person", {
       params: {
         profile_link: profileLink,
