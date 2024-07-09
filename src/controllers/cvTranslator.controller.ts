@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { generateResume } from '../services/GroqAI.service';
+import { translateResume } from '../services/GroqAI.service';
 import PDFParser from 'pdf-parse';
 
 const translateGeneratedResume = async (req: Request, res: Response) => {
@@ -15,7 +15,7 @@ const translateGeneratedResume = async (req: Request, res: Response) => {
     const { buffer } = req.file;
     const data = await PDFParser(buffer);
 
-    const translatedCV = await generateResume({
+    const translatedCV = await translateResume({
       detailedCV: data.text,
       resumeLanguage: language,
     });
