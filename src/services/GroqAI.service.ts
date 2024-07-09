@@ -15,6 +15,7 @@ type ResumeQuestionsData = {
   skills: Skill[];
 };
 type ResumeLanguage = {
+  detailedCV: string;
   resumeLanguage?: string;
 };
 const maxCharacterLimit = 1000;
@@ -53,7 +54,7 @@ const improveResume = async ({ detailedCV }: ResumeData) => {
   }
 };
 
-const translateResume = async ({ resumeLanguage }: ResumeLanguage) => {
+const translateResume = async ({ detailedCV, resumeLanguage }: ResumeLanguage) => {
   try {
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
     let requestMessages: Groq.Chat.Completions.ChatCompletionMessageParam[];
@@ -64,7 +65,7 @@ const translateResume = async ({ resumeLanguage }: ResumeLanguage) => {
       },
       {
         role: 'assistant',
-        content: resumeLanguage,
+        content: detailedCV,
       },
     ];
     const response = await groq.chat.completions.create({
