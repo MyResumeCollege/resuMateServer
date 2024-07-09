@@ -1,8 +1,11 @@
+import { ExperiencePeriod } from "../services/GroqAI.service";
+
 type ResumePromptParams = {
   name: string;
   job: string;
   description: string;
   skills: Skill[];
+  experiences: ExperiencePeriod[]
 };
 
 const SKILL_LEVEL_NAME: Record<number, string> = {
@@ -18,6 +21,7 @@ export const generateResumePrompt = ({
   job,
   description,
   skills,
+  experiences
 }: ResumePromptParams) =>
   `
     generate a resume based solely on the provided information without adding additional details.
@@ -32,7 +36,15 @@ export const generateResumePrompt = ({
     ${skills
       .map((skill) => `${skill.name}: ${SKILL_LEVEL_NAME[skill.level]}`)
       .join('\n')}
-`.trim();
+
+    [Experiences]:
+    ${experiences.map((experience) => {
+        const isCurrent = experience.isCurrent && "current job"
+        return `${experience.jobTitle} at ${experience.employer} ${isCurrent} .Description Job - ${experience.description}, ${experience.city}.
+         `;
+         //${experience.startDate.month},${experience.startDate.year} til ${endDate}
+      }).join('\n')}
+    `.trim();
 
 export const improveResumePrompt = `
     generate a resume based solely on the provided information without adding additional details.

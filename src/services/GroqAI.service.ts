@@ -8,12 +8,30 @@ type ResumeData = {
   detailedCV: string;
 };
 
+type ExperiencePeriodTime = {
+  month: string;
+  year: string;
+}
+
+export type ExperiencePeriod = {
+  id: string;
+  jobTitle: string;
+  employer: string;
+  city: string;
+  startDate: ExperiencePeriodTime;
+  endDate: ExperiencePeriodTime;
+  isCurrent: boolean;
+  description: string;
+}
+
 type ResumeQuestionsData = {
   name: string;
   job: string;
   description: string;
   skills: Skill[];
+  experiences: ExperiencePeriod[]
 };
+
 type ResumeLanguage = {
   detailedCV: string;
   resumeLanguage?: string;
@@ -92,6 +110,7 @@ const generateResume = async ({
   job,
   description,
   skills,
+  experiences
 }: ResumeQuestionsData) => {
   try {
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
@@ -111,7 +130,7 @@ const generateResume = async ({
     requestMessages = [
       {
         role: 'user',
-        content: generateResumePrompt({ name, job, description, skills }),
+        content: generateResumePrompt({ name, job, description, skills, experiences }),
       },
       {
         role: 'assistant',

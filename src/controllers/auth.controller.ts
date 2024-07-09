@@ -47,17 +47,14 @@ const logInGoogle = async (req: Request, res: Response) => {
 }
 
 const loginUser = async (req: Request, res: Response) => {
-  console.log('User has been logged in')
   const { email, password } = req.body
 
   if (!email || !password) {
-    console.log('email or password is null')
     return res.status(400).send('email or password is null')
   }
   try {
     const user = await User.findOne({ email })
     if (!user) {
-      console.log('user is not exists')
       return res.status(400).send('user is not exists')
     }
     // Check if the password correspond to the hashed password.
@@ -72,13 +69,11 @@ const loginUser = async (req: Request, res: Response) => {
       user,
     })
   } catch (err) {
-    console.log(err)
     return res.status(400).send(err.message)
   }
 }
 
 const registerUser = async (req: Request, res: Response) => {
-  console.log('User  has been registered')
   const { email, password, name, image } = req.body
 
   if (!email || !password || !name) {
@@ -116,8 +111,7 @@ const logoutUser = async (req: Request, res: Response) => {
     process.env.JWT_REFRESH_SECRET,
     async (err, user: { _id: string }) => {
       if (err) {
-        console.log(err)
-        return res.sendStatus(401)
+        return res.sendStatus(401).send(err.message)
       }
       try {
         const userDb = await User.findOne({ _id: user._id })
