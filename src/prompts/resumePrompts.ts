@@ -25,6 +25,7 @@ export const generateResumePrompt = ({
 }: ResumePromptParams) =>
   `
     generate a resume based solely on the provided information without adding additional details.
+    Ensure the resume is professionally formatted, clear.
     Please don't add an intro line : 'Here is the generated..'
     [Name]: ${name}
     [Job Title/Desired Position]: ${job}
@@ -39,10 +40,10 @@ export const generateResumePrompt = ({
 
     [Experiences]:
     ${experiences.map((experience) => {
-        const isCurrent = experience.isCurrent && "current job"
-        return `${experience.jobTitle} at ${experience.employer} ${isCurrent} .Description Job - ${experience.description}, ${experience.city}.
-         `;
-         //${experience.startDate.month},${experience.startDate.year} til ${endDate}
+        const endDate = experience.isCurrent ? "current" : `${experience.endDate.year}`
+        return `${experience.jobTitle} at ${experience.employer} .Description Job - ${experience.description}, ${experience.city}.
+        ${experience.startDate.year} - ${endDate}
+        `;
       }).join('\n')}
     `.trim();
 
