@@ -142,17 +142,6 @@ const generateResume = async ({
       },
     ];
 
-    const requestMessagesSkills: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
-      {
-        role: "user",
-        content: generateSkillsPrompt(skillsParams),
-      },
-      {
-        role: "assistant",
-        content: skillsPrompt,
-      },
-    ];
-
     const requestMessagesExperiences: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
       {
         role: "user",
@@ -164,16 +153,27 @@ const generateResume = async ({
       },
     ];
 
+    const requestMessagesSkills: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
+      {
+        role: "user",
+        content: generateSkillsPrompt(skillsParams),
+      },
+      {
+        role: "assistant",
+        content: skillsPrompt,
+      },
+    ];
+
     const [bioResponse, skillsResponse, experiencesResponse] =
       await Promise.all([
         requestCompletion(requestMessagesBio),
-        requestCompletion(requestMessagesSkills),
         requestCompletion(requestMessagesExperiences),
+        requestCompletion(requestMessagesSkills)
       ]);
 
     const bioRes = bioResponse.choices[0]?.message?.content || "";
-    const skillsRes = skillsResponse.choices[0]?.message?.content || "";
     const experiencesRes = experiencesResponse.choices[0]?.message?.content || "";
+    const skillsRes = skillsResponse.choices[0]?.message?.content || "";
     
     return [bioRes, experiencesRes, skillsRes];
   } catch (error) {
