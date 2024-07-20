@@ -6,11 +6,10 @@ export const generatePdf = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { fullName } = req.body;
+    const { fullName, jobTitle } = req.body;
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-
-    const url = `http://localhost:5173/preview?fullName=${encodeURIComponent(fullName)}`;
+    const url = `http://localhost:5173/preview?fullName=${encodeURIComponent(fullName)}&jobTitle=${encodeURIComponent(jobTitle)}`;
 
     await page.goto(url,{
         waitUntil: "networkidle2",

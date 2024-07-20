@@ -1,41 +1,21 @@
-import Groq from 'groq-sdk';
+import Groq from "groq-sdk";
 import {
-  generateResumePrompt,
+  generateBioPrompt,
   improveResumePrompt,
-} from '../prompts/resumePrompts';
+  generateSkillsPrompt,
+  generateExperiencesPrompt,
+  experiencesPrompt,
+  bioPrompt,
+  skillsPrompt,
+} from "../prompts/resumePrompts";
 
-type ResumeData = {
-  detailedCV: string;
-};
+import {
+  ResumeData,
+  ResumeQuestionsData,
+  ResumeLanguage,
+  ResumePromptParams,
+} from "../types/resumeData.type";
 
-type ExperiencePeriodTime = {
-  month: string;
-  year: string;
-}
-
-export type ExperiencePeriod = {
-  id: string;
-  jobTitle: string;
-  employer: string;
-  city: string;
-  startDate: ExperiencePeriodTime;
-  endDate: ExperiencePeriodTime;
-  isCurrent: boolean;
-  description: string;
-}
-
-type ResumeQuestionsData = {
-  name: string;
-  job: string;
-  description: string;
-  skills: Skill[];
-  experiences: ExperiencePeriod[]
-};
-
-type ResumeLanguage = {
-  detailedCV: string;
-  resumeLanguage?: string;
-};
 const maxCharacterLimit = 1000;
 
 const improveResume = async ({ detailedCV }: ResumeData) => {
@@ -44,17 +24,17 @@ const improveResume = async ({ detailedCV }: ResumeData) => {
     let requestMessages: Groq.Chat.Completions.ChatCompletionMessageParam[];
     requestMessages = [
       {
-        role: 'user',
+        role: "user",
         content: improveResumePrompt,
       },
       {
-        role: 'assistant',
+        role: "assistant",
         content: detailedCV,
       },
     ];
 
     const response = await groq.chat.completions.create({
-      model: 'llama3-8b-8192',
+      model: "llama3-8b-8192",
       messages: requestMessages,
       temperature: 1,
       max_tokens: maxCharacterLimit,
@@ -63,31 +43,34 @@ const improveResume = async ({ detailedCV }: ResumeData) => {
       presence_penalty: 0,
     });
 
-    const resume = response.choices[0]?.message?.content || '';
+    const resume = response.choices[0]?.message?.content || "";
 
     return resume;
   } catch (error) {
-    console.error('Error generating resume:', error);
+    console.error("Error generating resume:", error);
     throw error;
   }
 };
 
-const translateResume = async ({ detailedCV, resumeLanguage }: ResumeLanguage) => {
+const translateResume = async ({
+  detailedCV,
+  resumeLanguage,
+}: ResumeLanguage) => {
   try {
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
     let requestMessages: Groq.Chat.Completions.ChatCompletionMessageParam[];
     requestMessages = [
       {
-        role: 'user',
+        role: "user",
         content: `Translate this resume into ${resumeLanguage}:`,
       },
       {
-        role: 'assistant',
+        role: "assistant",
         content: detailedCV,
       },
     ];
     const response = await groq.chat.completions.create({
-      model: 'llama3-8b-8192',
+      model: "llama3-8b-8192",
       messages: requestMessages,
       temperature: 1,
       max_tokens: maxCharacterLimit,
@@ -96,63 +79,105 @@ const translateResume = async ({ detailedCV, resumeLanguage }: ResumeLanguage) =
       presence_penalty: 0,
     });
 
-    const resume = response.choices[0]?.message?.content || '';
+    const resume = response.choices[0]?.message?.content || "";
 
     return resume;
   } catch (error) {
-    console.error('Error generating resume:', error);
+    console.error("Error generating resume:", error);
+    throw error;
+  }
+};
+
+const requestCompletion = async (
+  messages: Groq.Chat.Completions.ChatCompletionMessageParam[]
+) => {
+  try {
+    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+    const response = await groq.chat.completions.create({
+      model: "llama3-8b-8192",
+      messages,
+      temperature: 1,
+      max_tokens: 1000,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Error making completion request:", error);
     throw error;
   }
 };
 
 const generateResume = async ({
-  name,
-  job,
   description,
   skills,
-  experiences
+  experiences,
 }: ResumeQuestionsData) => {
   try {
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-    let requestMessages: Groq.Chat.Completions.ChatCompletionMessageParam[];
 
-    const resumeContent = `
-    [Name]: ${name}
-    [Job Title/Desired Position]: ${job}
+    const bioParams: ResumePromptParams = {
+      description
+    };
 
-    [Professional Summary]:
-    ${description}
+    const skillsParams: ResumePromptParams = {
+      skills
+    };
 
-    [Career Goals/Objectives]:
-    ${skills.map((skill) => `${skill.name} - ${skill.level}`).join('\n')}
-    `.trim();
+    const experiencesParams: ResumePromptParams = {
+      experiences
+    };
 
-    requestMessages = [
+    const requestMessagesBio: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
       {
-        role: 'user',
-        content: generateResumePrompt({ name, job, description, skills, experiences }),
+        role: "user",
+        content: generateBioPrompt(bioParams),
       },
       {
-        role: 'assistant',
-        content: resumeContent,
+        role: "assistant",
+        content: bioPrompt,
       },
     ];
 
-    const response = await groq.chat.completions.create({
-      model: 'llama3-8b-8192',
-      messages: requestMessages,
-      temperature: 1,
-      max_tokens: maxCharacterLimit,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
-    });
+    const requestMessagesSkills: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
+      {
+        role: "user",
+        content: generateSkillsPrompt(skillsParams),
+      },
+      {
+        role: "assistant",
+        content: skillsPrompt,
+      },
+    ];
 
-    const resume = response.choices[0]?.message?.content || '';
+    const requestMessagesExperiences: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
+      {
+        role: "user",
+        content: generateExperiencesPrompt(experiencesParams),
+      },
+      {
+        role: "assistant",
+        content: experiencesPrompt,
+      },
+    ];
 
-    return resume;
+    const [bioResponse, skillsResponse, experiencesResponse] =
+      await Promise.all([
+        requestCompletion(requestMessagesBio),
+        requestCompletion(requestMessagesSkills),
+        requestCompletion(requestMessagesExperiences),
+      ]);
+
+    const bioRes = bioResponse.choices[0]?.message?.content || "";
+    const skillsRes = skillsResponse.choices[0]?.message?.content || "";
+    const experiencesRes = experiencesResponse.choices[0]?.message?.content || "";
+    
+    return [bioRes, experiencesRes, skillsRes];
   } catch (error) {
-    console.error('Error generating resume:', error);
+    console.error("Error generating resume:", error);
     throw error;
   }
 };
