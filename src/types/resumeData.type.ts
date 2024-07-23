@@ -22,6 +22,7 @@ type ResumeQuestionsData = {
   description: string;
   skills: Skill[];
   experiences: ExperiencePeriod[];
+  resumeLanguage?: string;
 };
 
 type ResumeLanguage = {
@@ -30,15 +31,16 @@ type ResumeLanguage = {
 };
 
 type ResumePromptParams = {
-    description?: string;
-    skills?: Skill[];
-    experiences?: ExperiencePeriod[];
-  }
+  description?: string;
+  skills?: Skill[];
+  experiences?: ExperiencePeriod[];
+  resumeLanguage?: string;
+};
 
 export {
-    ResumeData,
-    ResumeQuestionsData,
-    ExperiencePeriod,
-    ResumeLanguage,
-    ResumePromptParams
-}
+  ResumeData,
+  ResumeQuestionsData,
+  ExperiencePeriod,
+  ResumeLanguage,
+  ResumePromptParams,
+};
