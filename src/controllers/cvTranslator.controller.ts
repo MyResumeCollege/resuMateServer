@@ -28,3 +28,4 @@ const translateGeneratedResume = async (req: Request, res: Response) => {
 export default {
   translateGeneratedResume,
 };
+
