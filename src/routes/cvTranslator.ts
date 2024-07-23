@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.post(
   '/translate-resume',
-  upload.single('file'),
   cvTranslatorController.translateGeneratedResume
 );
 
