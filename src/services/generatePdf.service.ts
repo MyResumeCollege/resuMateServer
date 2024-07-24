@@ -1,24 +1,22 @@
 import { Request, Response } from 'express';
 import puppeteer from 'puppeteer';
+import axios from "axios";
+import {ResumeSections} from "../types/resumeData.type"
 
-export const generatePdf = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const generatePdf = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { fullName, jobTitle, bio, skills, experiences } = req.body;
+    const resumeSections: ResumeSections = req.body;
+    const previewResponse = await axios.post('http://localhost:3000/api/preview/generate-preview-url', {
+      body: JSON.stringify(resumeSections),
+    });
+    const { url } = await previewResponse.data;
+
     const browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
-    const url = `http://localhost:5173/preview?fullName=${encodeURIComponent(
-      fullName
-    )}&jobTitle=${encodeURIComponent(jobTitle)}&bio=${encodeURIComponent(
-      bio
-    )}&skills=${encodeURIComponent(skills)}&experiences=${encodeURIComponent(
-      experiences
-    )}`;
+    
     await page.goto(url, {
       waitUntil: 'networkidle2',
     });
