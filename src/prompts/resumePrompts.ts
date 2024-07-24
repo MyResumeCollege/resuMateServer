@@ -1,31 +1,42 @@
-import { ExperiencePeriod } from '../types/resumeData.type';
+import {
+  EducationPeriod,
+  ExperiencePeriod,
+  LanguageKnowledge,
+} from "../types/resumeData.type";
 
 type ResumePromptParams = {
   description?: string;
   skills?: Skill[];
   experiences?: ExperiencePeriod[];
+  educations?: EducationPeriod[];
+  languages?: LanguageKnowledge[];
 };
 
 const SKILL_LEVEL_NAME: Record<number, string> = {
-  1: 'Novice',
-  2: 'Beginner',
-  3: 'Skillful',
-  4: 'Experienced',
-  5: 'Expert',
+  1: "Novice",
+  2: "Beginner",
+  3: "Skillful",
+  4: "Experienced",
+  5: "Expert",
 };
+
 export const bioPrompt =
-  'Generate a professional bio summarizing achievements and qualifications based on the provided details. Highlight key accomplishments, skills, and areas of expertise in a concise and impactful manner, limited to 3-4 sentences, without introductory text.';
+  "Generate a professional bio summarizing achievements and qualifications based on the provided details. Highlight key accomplishments, skills, and areas of expertise in a concise and impactful manner, limited to 3-4 sentences, without introductory text.";
 
 export const experiencesPrompt =
-  "Format the experience section clearly and concisely, without using bullet points. Present each role and responsibility directly and straightforwardly. Do not include introductory text. Example: 'Front-end Developer at IDF, January 20-22: Designed landing pages using Figma, with a focus on user experience and interface design. Backend Developer at Wix, January 22 - present: Work on a variety of projects, utilizing Scala, TDD, and monitoring via Grafana to ensure efficient development. Create features from scratch, leveraging Elasticsearch, and executing CDC migrations.'";
+  "Format the experience section clearly and concisely, without using bullet points. Present each role and responsibility directly and straightforwardly. Example: 'Front-end Developer at IDF, January 20-22: Designed landing pages using Figma, with a focus on user experience and interface design. Backend Developer at Wix, January 22 - present: Work on a variety of projects, utilizing Scala, TDD, and monitoring via Grafana to ensure efficient development. Create features from scratch, leveraging Elasticsearch, and executing CDC migrations.'";
 
-export const skillsPrompt = `Format the following skills section so that each skill and its level of expertise are on separate lines, with each skill followed by a colon and its level of expertise on the same line:
-scala: Experienced \n
-TDD: Experienced \n
-node: Experienced \n
-Make sure to format each skill and its expertise level as shown, with no additional introductory text.
+export const skillsPrompt = `Write the following skills section so that each skill and its level of expertise are on separate lines, with each skill followed by a colon and its level of expertise on the same line:
+scala: Experienced
+TDD: Experienced
+node: Experienced
+communication: Experienced
+Make sure to format each skill and its expertise level as shown.`;
 
-`;
+export const educationPrompt = "Describe your key achievements, including any significant projects or accomplishments, in two sentences."
+
+export const languagePrompt =
+  "Languages:";
 
 export const improveResumePrompt = `
     generate a resume based solely on the provided information without adding additional details.
@@ -66,8 +77,8 @@ export const generateSkillsPrompt = ({ skills = [] }: ResumePromptParams) => {
   return skills.length > 0
     ? skills
         .map((skill) => `${skill.name} - ${SKILL_LEVEL_NAME[skill.level]}`)
-        .join(', ')
-    : '';
+        .join(", ")
+    : "";
 };
 
 export const generateExperiencesPrompt = ({
@@ -77,19 +88,46 @@ export const generateExperiencesPrompt = ({
     ? experiences
         .map((experience) => {
           const endDate = experience.isCurrent
-            ? 'current'
-            : `${experience.endDate?.year || ''}`;
+            ? "current"
+            : `${experience.endDate?.year || ""}`;
           return (
             `${experience.jobTitle} at ${experience.employer}\n` +
             `  Description: ${experience.description}, City: ${experience.city}\n` +
             `  ${experience.startDate.year} - ${endDate}`
           );
         })
-        .join('\n\n')
-    : '';
+        .join("\n\n")
+    : "";
 };
-export const generateExperiencesPromptTranslated = ({
-  experiences = [],
+
+export const generateEducationsPrompt = ({
+  educations = [],
 }: ResumePromptParams) => {
-  return experiences.length > 0 ? experiences.join('\n\n') : '';
+  return educations.length > 0
+    ? educations
+        .map((education) => {
+          const endDate = education.isCurrent
+            ? "current"
+            : `${education.endDate?.year || ""}`;
+          return (
+            `${education.degree} at ${education.school}\n` +
+            `  Description: ${education.description}\n` +
+            `  ${education.startDate.year} - ${endDate}`
+          );
+        })
+        .join("\n\n")
+    : "";
+};
+
+export const generateLanguagesPrompt = ({
+  languages = [],
+}: ResumePromptParams) => {
+  return languages.length > 0
+    ? "[Languages]: " + languages
+        .map((language) => {
+          const levelDescription = language.level === 1 ? "Native" : language.level === 0 ? "Advanced" : `Level ${language.level}`;
+          return `${language.lang} - ${levelDescription}`;
+        })
+        .join("\n\n")
+    : "";
 };

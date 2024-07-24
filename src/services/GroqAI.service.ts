@@ -7,7 +7,9 @@ import {
   experiencesPrompt,
   bioPrompt,
   skillsPrompt,
-} from '../prompts/resumePrompts';
+  generateLanguagesPrompt,
+  generateEducationsPrompt,
+} from "../prompts/resumePrompts";
 
 import {
   ResumeData,
@@ -79,10 +81,10 @@ const translateResume = async ({
   skills,
   experiences,
   resumeLanguage,
+  educations, // TODO
+  languages
 }: ResumeQuestionsData) => {
   try {
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-    let requestMessages: Groq.Chat.Completions.ChatCompletionMessageParam[];
 
     const requestMessagesBio: Groq.Chat.Completions.ChatCompletionMessageParam[] =
       [
@@ -126,8 +128,7 @@ const translateResume = async ({
       ]);
 
     const bioRes = bioResponse.choices[0]?.message?.content || '';
-    const experiencesRes =
-      experiencesResponse.choices[0]?.message?.content || '';
+    const experiencesRes = experiencesResponse.choices[0]?.message?.content || '';
     const skillsRes = skillsResponse.choices[0]?.message?.content || '';
 
     return [bioRes, experiencesRes, skillsRes];
@@ -140,10 +141,10 @@ const generateResume = async ({
   description,
   skills,
   experiences,
+  educations,
+  languages
 }: ResumeQuestionsData) => {
   try {
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
     const bioParams: ResumePromptParams = {
       description,
     };
@@ -156,17 +157,24 @@ const generateResume = async ({
       experiences,
     };
 
-    const requestMessagesBio: Groq.Chat.Completions.ChatCompletionMessageParam[] =
-      [
-        {
-          role: 'user',
-          content: generateBioPrompt(bioParams),
-        },
-        {
-          role: 'assistant',
-          content: bioPrompt,
-        },
-      ];
+    const educationsParams: ResumePromptParams = {
+      educations
+    }
+
+    const languagesParams: ResumePromptParams = {
+      languages
+    }
+
+    const requestMessagesBio: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
+      {
+        role: "user",
+        content: generateBioPrompt(bioParams),
+      },
+      {
+        role: "assistant",
+        content: bioPrompt,
+      },
+    ];
 
     const requestMessagesExperiences: Groq.Chat.Completions.ChatCompletionMessageParam[] =
       [
@@ -192,19 +200,46 @@ const generateResume = async ({
         },
       ];
 
-    const [bioResponse, skillsResponse, experiencesResponse] =
+    const requestMessagesEducations: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
+      {
+        role: "user",
+        content: generateEducationsPrompt(educationsParams),
+      },
+      {
+        role: "assistant",
+        content: "",
+      },
+    ];
+
+
+    const requestMessagesLanguages: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
+      {
+        role: "user",
+        content: generateLanguagesPrompt(languagesParams),
+      },
+      {
+        role: "assistant",
+        content: "Languages: ",
+      },
+    ];
+
+
+    const [bioResponse, skillsResponse, experiencesResponse, educationsResponse, lanugagesResponse] =
       await Promise.all([
         requestCompletion(requestMessagesBio),
         requestCompletion(requestMessagesExperiences),
         requestCompletion(requestMessagesSkills),
+        requestCompletion(requestMessagesEducations),
+        requestCompletion(requestMessagesLanguages)
       ]);
 
-    const bioRes = bioResponse.choices[0]?.message?.content || '';
-    const experiencesRes =
-      experiencesResponse.choices[0]?.message?.content || '';
-    const skillsRes = skillsResponse.choices[0]?.message?.content || '';
+    const bioRes = bioResponse.choices[0]?.message?.content || "";
+    const experiencesRes = experiencesResponse.choices[0]?.message?.content || "";
+    const skillsRes = skillsResponse.choices[0]?.message?.content || "";
+    const educationsRes = educationsResponse.choices[0]?.message?.content || ""
+    const languageRes = lanugagesResponse.choices[0]?.message?.content || ""
 
-    return [bioRes, experiencesRes, skillsRes];
+    return [bioRes, experiencesRes, skillsRes, educationsRes, languageRes];
   } catch (error) {
     console.error('Error generating resume:', error);
     throw error;
