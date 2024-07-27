@@ -13,7 +13,7 @@ const generateResumeFromExistCV = async (req: Request, res: Response) => {
 
     const CVUploadResponse = await improveResume({ detailedCV: data.text })
 
-    res.json({ CVTextContent: CVUploadResponse })
+    res.json({ CVUploadResponse })
   } catch (err) {
     console.error('Error uploading file:', err)
     res.status(500).send('Error uploading file.')

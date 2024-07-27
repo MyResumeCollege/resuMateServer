@@ -66,7 +66,7 @@ type LanguageKnowledge = {
   level: LanguageKnowledgeLevel;
 }
 
-type ResumeSections = {
+type ResumeResponse = {
   fullName: string,
   jobTitle: string,
   bio: string,
@@ -84,5 +84,5 @@ export {
   ResumePromptParams,
   EducationPeriod,
   LanguageKnowledge,
-  ResumeSections
+  ResumeResponse
 };

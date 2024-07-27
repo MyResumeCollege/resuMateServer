@@ -1,23 +1,22 @@
 import { Request, Response } from "express";
 import { generatePdf } from "../services/generatePdf.service";
 import { v4 as uuidv4 } from 'uuid';
-import { ResumeSections } from '../types/resumeData.type'
+import { ResumeResponse } from '../types/resumeData.type'
 
-const previewData = new Map<string, ResumeSections>();
+const previewData = new Map<string, ResumeResponse>();
 
 const generateCV = async (req: Request, res: Response): Promise<void> => {
   try {
     await generatePdf(req, res);
   } catch (err) {
-    console.error("Error in previewResume:", err);
     res.status(500).send("Error generating PDF");
   }
 };
 
 const setUrlForPreview = async (req: Request, res: Response) => {
-    const resumeSections: ResumeSections = req.body;
+    const resumeResponse: ResumeResponse = req.body;
     const uniqueId = uuidv4();
-    previewData.set(uniqueId, resumeSections);
+    previewData.set(uniqueId, resumeResponse);
 
     res.json({ url: `http://localhost:5173/preview/${uniqueId}` });
 };
