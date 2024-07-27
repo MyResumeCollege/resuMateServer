@@ -20,7 +20,7 @@ const translateGeneratedResume = async (req: Request, res: Response) => {
       languages: []
     });
 
-    res.status(200).json({ translatedCV });
+    res.status(200).json(translatedCV);
   } catch (err) {
     console.error('Error translating resume:', err);
     res.status(500).send('Error translating resume.');

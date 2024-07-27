@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import puppeteer from 'puppeteer';
 import axios from "axios";
-import {ResumeSections} from "../types/resumeData.type"
+import {ResumeResponse} from "../types/resumeData.type"
 
 export const generatePdf = async (req: Request, res: Response): Promise<void> => {
   try {
-    const resumeSections: ResumeSections = req.body;
+    const resumeResponse: ResumeResponse = req.body;
     const previewResponse = await axios.post('http://localhost:3000/api/preview/generate-preview-url', {
-      body: JSON.stringify(resumeSections),
+      body: JSON.stringify(resumeResponse),
     });
     const { url } = await previewResponse.data;
 

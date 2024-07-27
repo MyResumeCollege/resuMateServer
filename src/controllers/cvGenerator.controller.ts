@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { generateResume } from '../services/GroqAI.service';
+
 const generateResumeFromScratch = async (req: Request, res: Response) => {
   try {    
     const { description, skills, experiences, educations, languages } = req.body
@@ -10,7 +11,7 @@ const generateResumeFromScratch = async (req: Request, res: Response) => {
       educations,
       languages
     })
-    res.status(200).json({ CVTextContent: CVUploadResponse })
+    res.status(200).json(CVUploadResponse)
   } catch (err) {
     console.error('Error generating resume:', err);
     res.status(500).send('Error generating resume.');
