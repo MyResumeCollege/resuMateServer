@@ -18,7 +18,7 @@ const setUrlForPreview = async (req: Request, res: Response) => {
     const uniqueId = uuidv4();
     previewData.set(uniqueId, resumeResponse);
 
-    res.json({ url: `http://localhost:5173/preview/${uniqueId}` });
+    res.json({ url: `http://localhost:5173/preview/${uniqueId}/clear` });
 };
 
 const getPreviewCV = async (req: Request, res: Response) => {
