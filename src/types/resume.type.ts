@@ -1,8 +1,14 @@
 import mongoose from 'mongoose'
 
 export type Resume = {
-  _id?: mongoose.Schema.Types.ObjectId
-  ownerName: string
+  _id: mongoose.Schema.Types.ObjectId
+  ownerId: mongoose.Schema.Types.ObjectId
   createdAt: Date
-  content: string
+  fullName: string
+  jobTitle: string
+  bio: string
+  skills: string[]
+  experiences: []
+  educations: []
+  languages: []
 }

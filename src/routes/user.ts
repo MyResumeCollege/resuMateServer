@@ -1,11 +1,12 @@
-import express from "express";
-import userController from "../controllers/user.controller";
-import authMiddleware from "../middlewares/authMiddleware";
+import express from 'express'
+import userController from '../controllers/user.controller'
+import authMiddleware from '../middlewares/authMiddleware'
 
-const router = express.Router();
+const router = express.Router()
 
-router.post("/:id/set-premium", userController.setPremium);
+router.post('/:id/set-premium', userController.setPremium)
 
-router.get("/:id/is-premium", authMiddleware, userController.checkIfPremium);
-
-export default router;
+router.get('/:id/is-premium', authMiddleware, userController.checkIfPremium)
+// get all users
+router.get('/', userController.getAllUsers)
+export default router
