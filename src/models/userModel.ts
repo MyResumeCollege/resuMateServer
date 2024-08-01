@@ -31,6 +31,12 @@ const userSchema = new mongoose.Schema<IUser>({
       type: [String],
     },
   ],
+  resumes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Resume',
+    },
+  ],
 })
 
 const UserModel = mongoose.model<IUser>('User', userSchema)
