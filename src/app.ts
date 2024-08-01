@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import express, { Express } from 'express'
 import BaseRouter from './routes/index'
 import mongoose from 'mongoose'
+import path from 'path'
 dotenv.config()
 
 const initApp = async (): Promise<Express> => {
@@ -30,7 +31,8 @@ const initApp = async (): Promise<Express> => {
     app.use(express.urlencoded({ limit: '10mb', extended: true }))
 
     app.use('/api', BaseRouter)
-    app.use('/public', express.static('public'))
+    app.use('/templates', express.static('public/templates'))
+    console.log('Static files served from:', path.join(__dirname, '/public'))
 
     return app
   } catch (error) {
