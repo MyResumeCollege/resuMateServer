@@ -8,6 +8,7 @@ import authRoute from './auth'
 import CvTranslator from './cvTranslator'
 import CvSave from './cvSave'
 import templates from './cvTemplates'
+
 // Export the base-router
 const baseRouter = Router()
 

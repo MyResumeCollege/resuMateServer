@@ -3,13 +3,11 @@ import { generateResume } from '../services/GroqAI.service';
 
 const generateResumeFromScratch = async (req: Request, res: Response) => {
   try {    
-    const { description, skills, experiences, educations, languages } = req.body
+    const { description, experiences, educations } = req.body
     const CVUploadResponse = await generateResume({
       description,
-      skills,
       experiences,
-      educations,
-      languages
+      educations
     })
     res.status(200).json(CVUploadResponse)
   } catch (err) {

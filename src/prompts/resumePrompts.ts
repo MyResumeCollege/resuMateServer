@@ -26,17 +26,7 @@ export const bioPrompt =
 export const experiencesPrompt =
   "Format the experience section clearly and concisely, without using bullet points. Present each role and responsibility directly and straightforwardly. Example: 'Front-end Developer at IDF, January 20-22: Designed landing pages using Figma, with a focus on user experience and interface design. Backend Developer at Wix, January 22 - present: Work on a variety of projects, utilizing Scala, TDD, and monitoring via Grafana to ensure efficient development. Create features from scratch, leveraging Elasticsearch, and executing CDC migrations.'";
 
-export const skillsPrompt = `Write the following skills section so that each skill and its level of expertise are on separate lines, with each skill followed by a colon and its level of expertise on the same line:
-scala: Experienced
-TDD: Experienced
-node: Experienced
-communication: Experienced
-Make sure to format each skill and its expertise level as shown.`;
-
 export const educationPrompt = "Describe your key achievements, including any significant projects or accomplishments, in two sentences."
-
-export const languagePrompt =
-  "Languages:";
 
 export const improveResumePrompt = `
     generate a resume based solely on the provided information without adding additional details.
@@ -114,19 +104,6 @@ export const generateEducationsPrompt = ({
             `  Description: ${education.description}\n` +
             `  ${education.startDate.year} - ${endDate}`
           );
-        })
-        .join("\n\n")
-    : "";
-};
-
-export const generateLanguagesPrompt = ({
-  languages = [],
-}: ResumePromptParams) => {
-  return languages.length > 0
-    ? "[Languages]: " + languages
-        .map((language) => {
-          const levelDescription = language.level === 1 ? "Native" : language.level === 0 ? "Advanced" : `Level ${language.level}`;
-          return `${language.lang} - ${levelDescription}`;
         })
         .join("\n\n")
     : "";

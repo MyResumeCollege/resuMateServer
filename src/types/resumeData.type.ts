@@ -20,11 +20,9 @@ type ExperiencePeriod = {
 
 type ResumeQuestionsData = {
   description: string;
-  skills: Skill[];
   experiences: ExperiencePeriod[];
   resumeLanguage?: string;
   educations: EducationPeriod[];
-  languages: LanguageKnowledge[]
 };
 
 type ResumeLanguage = {
@@ -34,10 +32,8 @@ type ResumeLanguage = {
 
 type ResumePromptParams = {
   description?: string;
-  skills?: Skill[];
   experiences?: ExperiencePeriod[];
   educations?: EducationPeriod[];
-  languages?: LanguageKnowledge[];
 };
 
 type EducationPeriodTime = {
@@ -54,17 +50,6 @@ type EducationPeriod = {
   isCurrent: boolean;
   description: string;
 };
-
-enum LanguageKnowledgeLevel {
-  Advanced,
-  Native,
-}
-
-type LanguageKnowledge = {
-  id: string;
-  lang: string;
-  level: LanguageKnowledgeLevel;
-}
 
 type ResumeResponse = {
   fullName: string,
@@ -83,6 +68,5 @@ export {
   ResumeLanguage,
   ResumePromptParams,
   EducationPeriod,
-  LanguageKnowledge,
   ResumeResponse
 };
