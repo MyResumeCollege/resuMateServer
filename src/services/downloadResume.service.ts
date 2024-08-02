@@ -1,16 +1,9 @@
 import { Request, Response } from 'express';
 import puppeteer from 'puppeteer';
-import axios from "axios";
-import {ResumeResponse} from "../types/resumeData.type"
 
-export const generatePdf = async (req: Request, res: Response): Promise<void> => {
+export const downloadResume = async (req: Request, res: Response): Promise<void> => {
   try {
-    const resumeResponse: ResumeResponse = req.body;
-    const previewResponse = await axios.post('http://localhost:3000/api/preview/generate-preview-url', {
-      body: JSON.stringify(resumeResponse),
-    });
-    const { url } = await previewResponse.data;
-
+    const {url} = req.body;    
     const browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
