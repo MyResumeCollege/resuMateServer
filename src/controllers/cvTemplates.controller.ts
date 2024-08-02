@@ -5,9 +5,8 @@ import express from 'express'
 
 const app = express()
 
-// Define the base URL for image access
-const BASE_URL = 'http://localhost:3000' // Replace with your server's URL
-const IMAGE_FOLDER = '/templates' // Path relative to the public directory
+const BASE_URL = 'http://localhost:3000'
+const IMAGE_FOLDER = '/templates'
 
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')))

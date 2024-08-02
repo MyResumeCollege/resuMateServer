@@ -14,7 +14,7 @@ export const downloadResume = async (req: Request, res: Response): Promise<void>
       waitUntil: 'networkidle2',
     });
 
-    const pdfBuffer = await page.pdf({ format: 'a4' });
+    const pdfBuffer = await page.pdf({ format: 'a4', printBackground: true });
     await browser.close();
 
     res.setHeader('Content-Type', 'application/pdf');

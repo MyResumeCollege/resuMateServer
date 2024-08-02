@@ -13,11 +13,9 @@ const translateGeneratedResume = async (req: Request, res: Response) => {
 
     const translatedCV = await translateResume({
       description,
-      skills,
       experiences,
       resumeLanguage,
       educations: [], // TODO
-      languages: []
     });
 
     res.status(200).json(translatedCV);
