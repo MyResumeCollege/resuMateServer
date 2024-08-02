@@ -1,15 +1,12 @@
 import {
   EducationPeriod,
   ExperiencePeriod,
-  LanguageKnowledge,
 } from "../types/resumeData.type";
 
 type ResumePromptParams = {
   description?: string;
-  skills?: Skill[];
   experiences?: ExperiencePeriod[];
   educations?: EducationPeriod[];
-  languages?: LanguageKnowledge[];
 };
 
 const SKILL_LEVEL_NAME: Record<number, string> = {
@@ -61,14 +58,6 @@ export const improveResumePrompt = `
 
 export const generateBioPrompt = ({ description = '' }: ResumePromptParams) => {
   return description ? `[Professional Summary]:\n${description}` : '';
-};
-
-export const generateSkillsPrompt = ({ skills = [] }: ResumePromptParams) => {
-  return skills.length > 0
-    ? skills
-        .map((skill) => `${skill.name} - ${SKILL_LEVEL_NAME[skill.level]}`)
-        .join(", ")
-    : "";
 };
 
 export const generateExperiencesPrompt = ({
