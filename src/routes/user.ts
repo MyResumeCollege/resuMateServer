@@ -5,8 +5,6 @@ import authMiddleware from '../middlewares/authMiddleware'
 const router = express.Router()
 
 router.post('/:id/set-premium', userController.setPremium)
-
 router.get('/:id/is-premium', authMiddleware, userController.checkIfPremium)
-// get all users
 router.get('/', userController.getAllUsers)
 export default router
