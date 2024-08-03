@@ -1,12 +1,12 @@
 import Groq from 'groq-sdk';
 import {
-  generateBioPrompt,
   improveResumePrompt,
   generateExperiencesPrompt,
   experiencesPrompt,
   bioPrompt,
-
-  generateEducationsPrompt
+  rewritePrompt,
+  generateEducationsPrompt,
+  educationPrompt
 } from "../prompts/resumePrompts";
 
 import {
@@ -74,7 +74,7 @@ const requestCompletion = async (
   }
 };
 const translateResume = async ({
-  description,
+  bio,
   experiences,
   resumeLanguage,
   educations, // TODO
@@ -85,7 +85,7 @@ const translateResume = async ({
       [
         {
           role: 'user',
-          content: `${description}`,
+          content: bio,
         },
         {
           role: 'assistant',
@@ -119,15 +119,12 @@ const translateResume = async ({
     throw error;
   }
 };
+
 const generateResume = async ({
-  description,
+  bio,
   experiences,
   educations}: ResumeQuestionsData) => {
   try {
-    const bioParams: ResumePromptParams = {
-      description,
-    };
-
     const experiencesParams: ResumePromptParams = {
       experiences,
     };
@@ -139,7 +136,7 @@ const generateResume = async ({
     const requestMessagesBio: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
       {
         role: "user",
-        content: generateBioPrompt(bioParams),
+        content: bio,
       },
       {
         role: "assistant",
@@ -166,7 +163,7 @@ const generateResume = async ({
       },
       {
         role: "assistant",
-        content: "",
+        content: educationPrompt,
       },
     ];
 
@@ -188,4 +185,28 @@ const generateResume = async ({
   }
 };
 
-export { improveResume, generateResume, translateResume };
+const generateSection = async (section: string) => {
+  try {
+    const requestMessagesSection: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
+      {
+        role: "user",
+        content: section,
+      },
+      {
+        role: "assistant",
+        content: rewritePrompt,
+      },
+    ];
+
+    const bioResponse = await requestCompletion(requestMessagesSection);
+
+    const bioRes = bioResponse.choices[0]?.message?.content || "";
+
+    return [bioRes];
+  } catch (error) {
+    console.error('Error generating section:', error);
+    throw error;
+  }
+};
+
+export { improveResume, generateResume, translateResume, generateSection };

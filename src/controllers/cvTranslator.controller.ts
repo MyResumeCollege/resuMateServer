@@ -3,7 +3,7 @@ import { translateResume } from '../services/GroqAI.service';
 
 const translateGeneratedResume = async (req: Request, res: Response) => {
   try {
-    const { description, skills, experiences, resumeLanguage } = req.body;
+    const { bio, experiences, resumeLanguage } = req.body;
 
     if (!resumeLanguage) {
       return res
@@ -12,7 +12,7 @@ const translateGeneratedResume = async (req: Request, res: Response) => {
     }
 
     const translatedCV = await translateResume({
-      description,
+      bio,
       experiences,
       resumeLanguage,
       educations: [], // TODO

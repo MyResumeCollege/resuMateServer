@@ -17,13 +17,16 @@ const SKILL_LEVEL_NAME: Record<number, string> = {
   5: "Expert",
 };
 
+export const rewritePrompt = "Rewrite the following description to be concise and highlight key points in two sentences: [provided description]"
+
+
 export const bioPrompt =
   "Generate a professional bio summarizing achievements and qualifications based on the provided details. Highlight key accomplishments, skills, and areas of expertise in a concise and impactful manner, limited to 3-4 sentences, without introductory text.";
 
 export const experiencesPrompt =
-  "Format the experience section clearly and concisely, without using bullet points. Present each role and responsibility directly and straightforwardly. Example: 'Front-end Developer at IDF, January 20-22: Designed landing pages using Figma, with a focus on user experience and interface design. Backend Developer at Wix, January 22 - present: Work on a variety of projects, utilizing Scala, TDD, and monitoring via Grafana to ensure efficient development. Create features from scratch, leveraging Elasticsearch, and executing CDC migrations.'";
+  "Write the experience section clearly and concisely, without using bullet points. Present each role and responsibility directly and straightforwardly"
 
-export const educationPrompt = "Describe your key achievements, including any significant projects or accomplishments, in two sentences."
+export const educationPrompt = "Briefly describe your education, including significant projects or accomplishments, in two sentences."
 
 export const improveResumePrompt = `
     generate a resume based solely on the provided information without adding additional details.
