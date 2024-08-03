@@ -19,7 +19,6 @@ const SKILL_LEVEL_NAME: Record<number, string> = {
 
 export const rewritePrompt = "Rewrite the following description to be concise and highlight key points in two sentences: [provided description]"
 
-
 export const bioPrompt =
   "Generate a professional bio summarizing achievements and qualifications based on the provided details. Highlight key accomplishments, skills, and areas of expertise in a concise and impactful manner, limited to 3-4 sentences, without introductory text.";
 

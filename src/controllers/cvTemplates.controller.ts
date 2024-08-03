@@ -5,7 +5,7 @@ import express from 'express'
 
 const app = express()
 
-const BASE_URL = 'http://localhost:3000'
+const BASE_URL = 'http://localhost:' + process.env.PORT
 const IMAGE_FOLDER = '/templates'
 
 // Serve static files from the public directory
@@ -15,12 +15,11 @@ const getTemplates = async (req: Request, res: Response) => {
   try {
     const templates = await Template.find()
 
-    // Generate full URLs for each template image
     const templatesWithUrls = templates.map(template => ({
       ...template.toObject(),
       imageUrl: `${BASE_URL}${IMAGE_FOLDER}/${path.basename(
         template.imageUrl
-      )}`, // Assuming imageUrl stores the image name
+      )}`
     }))
 
     res.status(200).json(templatesWithUrls)
