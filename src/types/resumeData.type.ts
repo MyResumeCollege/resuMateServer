@@ -19,7 +19,7 @@ type ExperiencePeriod = {
 };
 
 type ResumeQuestionsData = {
-  description: string;
+  bio: string;
   experiences: ExperiencePeriod[];
   resumeLanguage?: string;
   educations: EducationPeriod[];
