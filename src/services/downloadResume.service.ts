@@ -15,13 +15,13 @@ export const downloadResume = async (req: Request, res: Response): Promise<void>
     });
 
     await page.evaluate(() => {
-      const elementsToRemove = [
-        document.getElementById('translate'),
-        document.getElementById('generate-section')
-      ];
-  
-      elementsToRemove.forEach(element => {
-        if (element) element.remove();
+      const classNamesToRemove = ['generate-section', 'translate']; // TODO remove toast
+    
+      classNamesToRemove.forEach(className => {
+        const elements = document.getElementsByClassName(className);
+        while (elements.length > 0) {
+          elements[0].remove();
+        }
       });
     });
   
