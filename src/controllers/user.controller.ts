@@ -70,10 +70,32 @@ const getUserResumeIds = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error getting resume IDs", error });
   }
 };
+const getResumePreviews = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    const user = await UserModel.findById(userId).populate("resumes");
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const resumePreviews = (user.resumes as unknown as any[]).map((resume) => ({
+      resumeId: resume._id,
+      creationDate: resume.createdAt,
+      jobTitle: resume.jobTitle,
+      fullName: resume.fullName,
+    }));
+
+    res.status(200).json(resumePreviews);
+  } catch (error) {
+    res.status(500).json({ message: "Error getting resume previews", error });
+  }
+};
 
 export default {
   checkIfPremium,
   setPremium,
   getAllUsers,
   getUserResumeIds,
+  getResumePreviews,
 };
