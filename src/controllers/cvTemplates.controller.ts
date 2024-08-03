@@ -12,11 +12,13 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const getTemplates = async (req: Request, res: Response) => {
   try {
+    const BASE_URL = 'http://localhost:3000'
+    
     const templates = await Template.find();
 
     const templatesWithUrls = templates.map((template) => ({
       ...template.toObject(),
-      imageUrl: `${BASE_URL}${IMAGE_FOLDER}/${path.basename(
+      imageUrl: `${BASE_URL}${IMAGE_FOLDER}${path.basename(
         template.imageUrl
       )}`,
     }));
