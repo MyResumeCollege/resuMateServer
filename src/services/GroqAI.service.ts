@@ -5,6 +5,7 @@ import {
   experiencesPrompt,
   bioPrompt,
   rewritePrompt,
+  generateBioPrompt,
   generateEducationsPrompt,
   educationPrompt
 } from "../prompts/resumePrompts";
@@ -125,6 +126,10 @@ const generateResume = async ({
   experiences,
   educations}: ResumeQuestionsData) => {
   try {
+    const bioParams: ResumePromptParams = {
+      bio,
+    };
+
     const experiencesParams: ResumePromptParams = {
       experiences,
     };
@@ -136,7 +141,7 @@ const generateResume = async ({
     const requestMessagesBio: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
       {
         role: "user",
-        content: bio,
+        content: generateBioPrompt(bioParams),
       },
       {
         role: "assistant",
