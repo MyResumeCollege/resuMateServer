@@ -31,7 +31,7 @@ type ResumeLanguage = {
 };
 
 type ResumePromptParams = {
-  description?: string;
+  bio?: string;
   experiences?: ExperiencePeriod[];
   educations?: EducationPeriod[];
 };
