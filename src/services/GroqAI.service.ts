@@ -190,12 +190,12 @@ const generateResume = async ({
   }
 };
 
-const generateSection = async (section: string) => {
+const generateSection = async (data: string) => {
   try {
     const requestMessagesSection: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
       {
         role: "user",
-        content: section,
+        content: data,
       },
       {
         role: "assistant",
@@ -203,11 +203,11 @@ const generateSection = async (section: string) => {
       },
     ];
 
-    const bioResponse = await requestCompletion(requestMessagesSection);
+    const sectionResponse = await requestCompletion(requestMessagesSection);
 
-    const bioRes = bioResponse.choices[0]?.message?.content || "";
+    const sectionRes = sectionResponse.choices[0]?.message?.content || "";
 
-    return [bioRes];
+    return sectionRes;
   } catch (error) {
     console.error('Error generating section:', error);
     throw error;
