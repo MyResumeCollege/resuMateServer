@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import UserModel from "../models/userModel";
 import { Request, Response } from "express";
 
@@ -51,8 +52,28 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+const getUserResumeIds = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    const user = await UserModel.findById(userId).populate("resumes");
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const resumeIds = (
+      user.resumes as unknown as mongoose.Types.ObjectId[]
+    ).map((resume) => (resume as mongoose.Types.ObjectId)._id);
+
+    res.status(200).json(resumeIds);
+  } catch (error) {
+    res.status(500).json({ message: "Error getting resume IDs", error });
+  }
+};
+
 export default {
   checkIfPremium,
   setPremium,
   getAllUsers,
+  getUserResumeIds,
 };
