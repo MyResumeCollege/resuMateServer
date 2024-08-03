@@ -6,5 +6,7 @@ const router = express.Router();
 
 router.post("/:id/set-premium", userController.setPremium);
 router.get("/:id/is-premium", authMiddleware, userController.checkIfPremium);
+router.get("/:userId/resume-ids", userController.getUserResumeIds);
 router.get("/", userController.getAllUsers);
+
 export default router;
