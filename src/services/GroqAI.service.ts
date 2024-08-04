@@ -127,7 +127,7 @@ const generateResume = async ({
   educations}: ResumeQuestionsData) => {
   try {
     const bioParams: ResumePromptParams = {
-      bio,
+      bio
     };
 
     const experiencesParams: ResumePromptParams = {
