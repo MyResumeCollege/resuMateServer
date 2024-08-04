@@ -4,7 +4,7 @@ import {
 } from "../types/resumeData.type";
 
 type ResumePromptParams = {
-  description?: string;
+  bio?: string;
   experiences?: ExperiencePeriod[];
   educations?: EducationPeriod[];
 };
@@ -58,8 +58,8 @@ export const improveResumePrompt = `
     [Include any other pertinent details, such as certifications, awards, or memberships in professional organizations]
 `.trim();
 
-export const generateBioPrompt = ({ description = '' }: ResumePromptParams) => {
-  return description ? `[Professional Summary]:\n${description}` : '';
+export const generateBioPrompt = ({ bio = '' }: ResumePromptParams) => {
+  return bio ? `[Professional Summary]:\n${bio}` : '';
 };
 
 export const generateExperiencesPrompt = ({
