@@ -12,6 +12,37 @@ export type skillsType = {
   level: number
 }
 
+export type ExperiencePeriodTime = {
+  month: string;
+  year: string;
+}
+
+export type ExperiencePeriod = {
+  id: string;
+  jobTitle: string;
+  employer: string;
+  city: string;
+  startDate: ExperiencePeriodTime;
+  endDate: ExperiencePeriodTime;
+  isCurrent: boolean;
+  description: string;
+}
+
+export type EducationPeriodTime = {
+  month: string;
+  year: string;
+}
+
+export type EducationPeriod = {
+  id: string;
+  degree: string;
+  school: string;
+  startDate: EducationPeriodTime;
+  endDate: EducationPeriodTime;
+  isCurrent: boolean;
+  description: string;
+}
+
 export type Resume = {
   _id: mongoose.Schema.Types.ObjectId
   ownerId: mongoose.Schema.Types.ObjectId
@@ -20,7 +51,7 @@ export type Resume = {
   jobTitle: string
   bio: string
   skills: skillsType[]
-  experiences: []
-  educations: []
+  experiences: ExperiencePeriod[];
+  educations: EducationPeriod[];
   languages: languagesType[]
 }
