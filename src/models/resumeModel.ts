@@ -15,14 +15,16 @@ const languagesSchema = new mongoose.Schema<languagesType>({
 
 const resumeSchema = new mongoose.Schema<Resume>({
   ownerId: { type: mongoose.Schema.Types.ObjectId, required: true },
-  createdAt: { type: Date, required: true, default: Date.now() },
+  createdAt: { type: Date, required: true, default: Date.now },
   fullName: { type: String },
   jobTitle: { type: String },
   bio: { type: String },
   skills: { type: [skillsSchema], default: [] },
-  experiences: { type: [String] },
-  educations: { type: [String] },
+  experiences: { type: String },
+  educations: { type: String },
   languages: { type: [languagesSchema], default: [] },
-})
+});
 
-export default mongoose.model<Resume>('Resume', resumeSchema)
+const ResumeModel = mongoose.model<Document & Resume>('Resume', resumeSchema);
+
+export default ResumeModel;
