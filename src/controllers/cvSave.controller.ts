@@ -1,8 +1,23 @@
 import { Request, Response } from 'express'
-import ResumeModel from '../models/resumeModel'
 import UserModel from '../models/userModel'
+import { Skill } from '../types/skill.type';
+import { LanguageKnowledge } from '../types/language-knowledge.type';
+import { Types } from 'mongoose';
+import ResumeModel from '../models/resumeModel';
+import mongoose from 'mongoose'
 
-const saveCv = async (req: Request, res: Response) => {
+interface CreateResumeRequestBody {
+  ownerId: Types.ObjectId;
+  fullName?: string;
+  jobTitle?: string;
+  bio?: string;
+  skills: Skill[];
+  experiences?: string;
+  educations?: string;
+  languages: LanguageKnowledge[];
+}
+
+const saveCv = async (req: Request<{}, {}, CreateResumeRequestBody>, res: Response) => {
   try {
     const {
       ownerId,
@@ -14,7 +29,7 @@ const saveCv = async (req: Request, res: Response) => {
       educations,
       languages,
     } = req.body
-    const newResume = new ResumeModel({
+    const savedResume = new ResumeModel({
       ownerId,
       fullName,
       jobTitle,
@@ -24,16 +39,18 @@ const saveCv = async (req: Request, res: Response) => {
       educations,
       languages,
     })
-    await newResume.save()
+    await savedResume.save()
     
     const user = await UserModel.findById(ownerId)
     if (!user) {
       res.status(404).json({ message: 'User not found' })
       return
     }
-    user.resumes.push(newResume._id)
+
+    const resumeId = savedResume._id as mongoose.Schema.Types.ObjectId;
+    user.resumes.push(resumeId);
     await user.save()
-    res.status(201).json(newResume)
+    res.status(201).json(savedResume)
   } catch (error) {
     res.status(500).json({ message: 'Error saving resume', error })
   }

@@ -43,15 +43,14 @@ export type EducationPeriod = {
   description: string;
 }
 
-export type Resume = {
-  _id: mongoose.Schema.Types.ObjectId
-  ownerId: mongoose.Schema.Types.ObjectId
-  createdAt: Date
-  fullName: string
-  jobTitle: string
-  bio: string
-  skills: skillsType[]
-  experiences: ExperiencePeriod[];
-  educations: EducationPeriod[];
-  languages: languagesType[]
+export interface Resume extends mongoose.Document {
+  ownerId: mongoose.Types.ObjectId;
+  createdAt: Date;
+  fullName?: string;
+  jobTitle?: string;
+  bio?: string;
+  skills: skillsType[];
+  experiences?: string;
+  educations?: string;
+  languages: languagesType[];
 }
