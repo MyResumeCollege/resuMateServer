@@ -37,8 +37,6 @@ const userSchema = new mongoose.Schema<IUser>({
       ref: 'Resume',
     },
   ],
-  resetPasswordToken: String,
-  resetPasswordExpires: Number,
 });
 
 const UserModel = mongoose.model<IUser>('User', userSchema);
