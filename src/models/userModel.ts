@@ -1,5 +1,5 @@
-import mongoose from 'mongoose'
-import { IUser } from '../types/user.type'
+import mongoose from 'mongoose';
+import { IUser } from '../types/user.type';
 
 const userSchema = new mongoose.Schema<IUser>({
   name: {
@@ -31,9 +31,16 @@ const userSchema = new mongoose.Schema<IUser>({
       type: [String],
     },
   ],
-  resumes: { type: [mongoose.Schema.Types.ObjectId], ref: 'Resume' },
-})
+  resumes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Resume',
+    },
+  ],
+  resetPasswordToken: String,
+  resetPasswordExpires: Number,
+});
 
-const UserModel = mongoose.model<IUser>('User', userSchema)
+const UserModel = mongoose.model<IUser>('User', userSchema);
 
-export default UserModel
+export default UserModel;

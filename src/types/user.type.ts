@@ -1,4 +1,4 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document } from 'mongoose';
 
 export interface IUser extends Document {
   _id: mongoose.Types.ObjectId;
@@ -9,4 +9,6 @@ export interface IUser extends Document {
   image?: string;
   isPremium: boolean;
   refreshTokens?: string[];
+  resetPasswordToken?: string;
+  resetPasswordExpires?: number;
 }
