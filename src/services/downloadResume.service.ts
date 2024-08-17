@@ -3,7 +3,8 @@ import puppeteer from 'puppeteer';
 
 export const downloadResume = async (req: Request, res: Response): Promise<void> => {
   try {
-    const {url} = req.body;    
+    const {url} = req.body;   
+     
     const browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -25,7 +26,6 @@ export const downloadResume = async (req: Request, res: Response): Promise<void>
       });
     });
   
-
     const pdfBuffer = await page.pdf({ format: 'a4', printBackground: true });
     await browser.close();
 

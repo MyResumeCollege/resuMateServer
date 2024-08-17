@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { downloadResume } from "../services/downloadResume.service";
-import { v4 as uuidv4 } from "uuid";
 import { ResumeResponse } from "../types/resumeData.type";
-
-const previewData = new Map<string, ResumeResponse>();
+import { v4 as uuidv4 } from "uuid";
+import PreviewModel from "../models/previewModel";
 
 const downloadCV = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -13,24 +12,25 @@ const downloadCV = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const setUrlForPreview = async (req: Request, res: Response) => {
+const updatePreviewModelAndSetUrlForPreview = async (req: Request, res: Response) => {
   const resumeResponse: ResumeResponse = req.body;
-  const uniqueId = uuidv4();
-  previewData.set(uniqueId, resumeResponse);
-
-  res.json({ url: `http://localhost:5173/preview/${uniqueId}/clear` });
+  const id = req.params.id || uuidv4();
+  
+  const preview = new PreviewModel({ id, resumeData: resumeResponse });
+  await preview.save();
+  res.status(200).json({ url: `http://localhost:5173/preview/${id}/clear` });
 };
 
 const getPreviewCV = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const data = previewData.get(id);
+  const data = await PreviewModel.findOne({ id });
 
-  if (data) res.json(data);
+  if (data) res.json(data.resumeData);  
   else res.status(404).json({ error: "Data not found" });
 };
 
 export default {
   downloadCV,
-  setUrlForPreview,
-  getPreviewCV,
+  updatePreviewModelAndSetUrlForPreview,
+  getPreviewCV
 };
