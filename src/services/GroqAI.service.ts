@@ -74,11 +74,12 @@ const requestCompletion = async (
     throw error;
   }
 };
+
 const translateResume = async ({
+  resumeLanguage,
   bio,
   experiences,
-  resumeLanguage,
-  educations, // TODO
+  educations
 }: ResumeQuestionsData) => {
   try {
 
@@ -145,7 +146,7 @@ const generateResume = async ({
       },
       {
         role: "assistant",
-        content: bioPrompt,
+        content: bioPrompt
       },
     ];
     
@@ -157,7 +158,7 @@ const generateResume = async ({
         },
         {
           role: 'assistant',
-          content: experiencesPrompt,
+          content: experiencesPrompt
         },
       ];
 
@@ -168,7 +169,7 @@ const generateResume = async ({
       },
       {
         role: "assistant",
-        content: educationPrompt,
+        content: educationPrompt
       },
     ];
 

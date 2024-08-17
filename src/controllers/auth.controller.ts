@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
-import User from '../models/userModel';
-import { IUser } from '../types/user.type';
-import { OAuth2Client } from 'google-auth-library';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import { Request, Response } from "express";
+import User from "../models/userModel";
+import { IUser } from "../types/user.type";
+import { OAuth2Client } from "google-auth-library";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const client = new OAuth2Client();
 
@@ -38,6 +38,7 @@ const logInGoogle = async (req: Request, res: Response) => {
         name: user.name,
         email: user.email,
         image: user.image,
+        isPremium: false,
       },
     });
   } catch (err) {
@@ -49,23 +50,29 @@ const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).send('email or password is null');
+    return res.status(400).send("email or password is null");
   }
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).send('user is not exists');
+      return res.status(400).send("user is not exists");
     }
     // Check if the password correspond to the hashed password.
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      throw res.status(400).send('invalid password');
+      throw res.status(400).send("invalid password");
     }
     const { accessToken, refreshToken } = await generateTokens(user);
     return res.status(200).send({
       accessToken,
       refreshToken,
-      user,
+      user: {
+        _id: user._id.toString(),
+        email: user.email,
+        name: user.name,
+        image: user.image,
+        isPremium: false,
+      },
     });
   } catch (err) {
     return res.status(400).send(err.message);
@@ -76,13 +83,13 @@ const registerUser = async (req: Request, res: Response) => {
   const { email, password, name, image } = req.body;
 
   if (!email || !password || !name) {
-    return res.status(400).send('missing email or password or name');
+    return res.status(400).send("missing email or password or name");
   }
 
   try {
     const existAccount = await User.findOne({ email });
     if (existAccount) {
-      throw res.status(400).send('user already exist');
+      throw res.status(400).send("user already exist");
     }
     const encryptedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
@@ -100,8 +107,8 @@ const registerUser = async (req: Request, res: Response) => {
 };
 
 const logoutUser = async (req: Request, res: Response) => {
-  const authHeader = req.headers['authorization'];
-  const refreshToken = authHeader && authHeader.split(' ')[1]; // Bearer <token>
+  const authHeader = req.headers["authorization"];
+  const refreshToken = authHeader && authHeader.split(" ")[1]; // Bearer <token>
 
   if (!refreshToken) return res.sendStatus(401);
 
@@ -126,7 +133,7 @@ const logoutUser = async (req: Request, res: Response) => {
             (t) => t !== refreshToken
           );
           await userDb.save();
-          return res.status(200).send('User has been logged out');
+          return res.status(200).send("User has been logged out");
         }
       } catch (err) {
         res.send(err.message);
