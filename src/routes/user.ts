@@ -9,4 +9,7 @@ router.get("/:id/is-premium", authMiddleware, userController.checkIfPremium);
 router.get("/:userId/resume-previews", userController.getResumePreviews);
 router.get("/:userId/:id", userController.getResumeUrl)
 
+router.post("/:userId/upsert", userController.upsertCv);
+router.delete("/:userId/:resumeId", userController.deleteCv);
+
 export default router;

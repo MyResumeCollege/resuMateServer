@@ -16,7 +16,7 @@ import {
   ResumePromptParams,
 } from '../types/resumeData.type';
 
-const maxCharacterLimit = 1000;
+const maxCharacterLimit = 100;
 
 const improveResume = async ({ detailedCV }: ResumeData) => {
   try {
@@ -148,7 +148,7 @@ const generateResume = async ({
         content: bioPrompt,
       },
     ];
-
+    
     const requestMessagesExperiences: Groq.Chat.Completions.ChatCompletionMessageParam[] =
       [
         {

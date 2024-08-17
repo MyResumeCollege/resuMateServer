@@ -1,28 +1,16 @@
 import mongoose from 'mongoose'
-import { languagesType, Resume, skillsType } from '../types/resume.type'
-
-const skillsSchema = new mongoose.Schema<skillsType>({
-  id: { type: String, required: true },
-  name: { type: String, required: true },
-  level: { type: Number, required: true },
-})
-
-const languagesSchema = new mongoose.Schema<languagesType>({
-  id: { type: String, required: true },
-  lang: { type: String, required: true },
-  level: { type: Number, required: true },
-})
+import { Resume } from '../types/resume.type'
 
 const resumeSchema = new mongoose.Schema<Resume>({
-  ownerId: { type: mongoose.Schema.Types.ObjectId, required: true },
+  resumePreviewId: { type: String },
   createdAt: { type: Date, required: true, default: Date.now },
   fullName: { type: String },
   jobTitle: { type: String },
   bio: { type: String },
-  skills: { type: [skillsSchema], default: [] },
+  skills: { type: String },
   experiences: { type: String },
   educations: { type: String },
-  languages: { type: [languagesSchema], default: [] },
+  languages: { type: String },
 });
 
 const ResumeModel = mongoose.model<Document & Resume>('Resume', resumeSchema);

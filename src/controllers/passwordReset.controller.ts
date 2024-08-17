@@ -21,7 +21,6 @@ const transporter = nodemailer.createTransport({
 });
 transporter.verify(function (error, _) {
   if (error) {
-    console.log('Transporter verification error:', error);
     throw error
   }
 });
@@ -93,7 +92,6 @@ const verifyResetToken = async (req: Request, res: Response) => {
   }
 };
 
-// Reset the password
 const resetPassword = async (req: Request, res: Response) => {
   const { token } = req.params;
   const { password } = req.body;

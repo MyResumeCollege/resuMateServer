@@ -44,13 +44,13 @@ export type EducationPeriod = {
 }
 
 export interface Resume extends mongoose.Document {
-  ownerId: mongoose.Types.ObjectId;
+  resumePreviewId: string;
   createdAt: Date;
   fullName?: string;
   jobTitle?: string;
   bio?: string;
-  skills: skillsType[];
+  skills: string;
   experiences?: string;
   educations?: string;
-  languages: languagesType[];
+  languages: string;
 }
