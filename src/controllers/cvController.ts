@@ -18,7 +18,7 @@ const updatePreviewModelAndSetUrlForPreview = async (req: Request, res: Response
   
   const preview = new PreviewModel({ id, resumeData: resumeResponse });
   await preview.save();
-  res.status(200).json({ url: `http://localhost:5173/preview/${id}/clear` });
+  res.status(200).json({ url: `${process.env.FRONTEND_URL}/preview/${id}/clear` });
 };
 
 const getPreviewCV = async (req: Request, res: Response) => {
