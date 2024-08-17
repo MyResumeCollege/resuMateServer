@@ -1,13 +1,13 @@
 import UserModel from "../models/userModel";
 import { Request, Response } from "express";
-import {Resume} from "../types/resume.type"
+import { Resume } from "../types/resume.type";
 import resumeModel from "../models/resumeModel";
-import ResumeModel from '../models/resumeModel';
-import mongoose from 'mongoose'
+import ResumeModel from "../models/resumeModel";
+import mongoose from "mongoose";
 import PreviewModel from "../models/previewModel";
 
 type CreateResumeRequestBody = {
-  resumePreviewId?: string
+  resumePreviewId?: string;
   fullName?: string;
   jobTitle?: string;
   bio?: string;
@@ -15,7 +15,7 @@ type CreateResumeRequestBody = {
   experiences?: string;
   educations?: string;
   languages: string;
-}
+};
 
 async function checkIfPremium(req: Request, res: Response) {
   try {
@@ -62,7 +62,9 @@ async function setPremium(req: Request, res: Response) {
 const getResumePreviews = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
-    const user = await UserModel.findById(userId).populate<{ resumes: Resume[] }>("resumes");
+    const user = await UserModel.findById(userId).populate<{
+      resumes: Resume[];
+    }>("resumes");
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
@@ -71,7 +73,7 @@ const getResumePreviews = async (req: Request, res: Response) => {
     const resumePreviews = (user.resumes as Resume[]).map((resume) => ({
       id: resume._id,
       creationDate: resume.createdAt,
-      jobTitle: resume.jobTitle
+      jobTitle: resume.jobTitle,
     }));
 
     res.status(200).json(resumePreviews);
@@ -83,14 +85,14 @@ const getResumePreviews = async (req: Request, res: Response) => {
 const getResumeUrl = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
-    const user = await UserModel.findById(userId)
+    const user = await UserModel.findById(userId);
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
-    
-    const resumeId = req.params.id;    
-    const resume = await resumeModel.findById(resumeId) as Resume    
+
+    const resumeId = req.params.id;
+    const resume = (await resumeModel.findById(resumeId)) as Resume;
     if (!resume) {
       res.status(404).json({ message: "Resume not found" });
       return;
@@ -101,7 +103,10 @@ const getResumeUrl = async (req: Request, res: Response) => {
   }
 };
 
-const upsertCv = async (req: Request<{userId: string}, {}, CreateResumeRequestBody>, res: Response) => {
+const upsertCv = async (
+  req: Request<{ userId: string }, {}, CreateResumeRequestBody>,
+  res: Response
+) => {
   try {
     const {
       resumePreviewId,
@@ -111,26 +116,33 @@ const upsertCv = async (req: Request<{userId: string}, {}, CreateResumeRequestBo
       skills,
       experiences,
       educations,
-      languages
-    } = req.body
+      languages,
+    } = req.body;
     const userId = req.params.userId;
-    
+
     let savedResume = await ResumeModel.findOne({ resumePreviewId });
-        
-    if (savedResume != undefined) {            
+
+    if (savedResume != undefined) {
       savedResume.bio = bio;
       savedResume.experiences = experiences;
       savedResume.educations = educations;
-      
+
       await PreviewModel.updateOne(
         { id: resumePreviewId },
-        { $set: { resumeData: {
-          bio,
-          experiences,
-          educations
-        } } }
+        {
+          $set: {
+            resumeData: {
+              fullName,
+              jobTitle,
+              bio,
+              experiences,
+              educations,
+              skills,
+              languages,
+            },
+          },
+        }
       );
-    
     } else {
       savedResume = new ResumeModel({
         resumePreviewId,
@@ -140,33 +152,33 @@ const upsertCv = async (req: Request<{userId: string}, {}, CreateResumeRequestBo
         skills,
         experiences,
         educations,
-        languages
+        languages,
       });
 
-      const user = await UserModel.findById({ _id: userId })
+      const user = await UserModel.findById({ _id: userId });
       if (!user) {
-        res.status(404).json({ message: 'User not found' })
-        return
+        res.status(404).json({ message: "User not found" });
+        return;
       }
-      
+
       user.resumes.push(savedResume._id as mongoose.Schema.Types.ObjectId);
-      await user.save()
+      await user.save();
     }
-    
-    await savedResume.save()
-    res.status(201).json(savedResume)
+
+    await savedResume.save();
+    res.status(201).json(savedResume);
   } catch (error) {
-    res.status(500).json({ message: 'Error saving resume', error })
+    res.status(500).json({ message: "Error saving resume", error });
   }
-}
+};
 
 const deleteCv = async (req: Request, res: Response) => {
   try {
     // resumeId is resumePreviewId
     const { resumeId, userId } = req.params;
 
-    const resume = await ResumeModel.findOne({ resumePreviewId: resumeId });    
-    if (!resume) {      
+    const resume = await ResumeModel.findOne({ resumePreviewId: resumeId });
+    if (!resume) {
       return res.status(404).json({ message: "Resume not found" });
     }
 
@@ -178,16 +190,22 @@ const deleteCv = async (req: Request, res: Response) => {
     );
 
     if (userResult.modifiedCount === 0) {
-      return res.status(404).json({ message: "User not found or resumeId not in user's resumes array" });
+      return res
+        .status(404)
+        .json({
+          message: "User not found or resumeId not in user's resumes array",
+        });
     }
 
     await PreviewModel.deleteOne({ id: resumeId });
 
-    res.status(200).json({ message: "Resume deleted successfully", resumeId: resume._id });
-    } catch (error) {
-    res.status(500).json({ message : 'Error delete resume', error})
+    res
+      .status(200)
+      .json({ message: "Resume deleted successfully", resumeId: resume._id });
+  } catch (error) {
+    res.status(500).json({ message: "Error delete resume", error });
   }
-}
+};
 
 export default {
   checkIfPremium,
