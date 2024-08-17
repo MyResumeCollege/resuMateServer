@@ -21,14 +21,19 @@ type ExperiencePeriod = {
 type ResumeQuestionsData = {
   bio: string;
   experiences: ExperiencePeriod[];
-  resumeLanguage?: string;
   educations: EducationPeriod[];
 };
 
-type ResumeLanguage = {
-  detailedCV: string;
-  resumeLanguage?: string;
-};
+type ResumeTranslatedData = {
+  fullName: string;
+  jobTitle: string;
+  bio: string;
+  experiences: string;
+  educations: string;
+  skills: string;
+  languages: string;
+  language?: string;
+}
 
 type ResumePromptParams = {
   bio?: string;
@@ -65,8 +70,8 @@ export {
   ResumeData,
   ResumeQuestionsData,
   ExperiencePeriod,
-  ResumeLanguage,
   ResumePromptParams,
   EducationPeriod,
-  ResumeResponse
+  ResumeResponse,
+  ResumeTranslatedData
 };
