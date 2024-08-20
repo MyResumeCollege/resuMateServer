@@ -59,6 +59,7 @@ type ResumeResponse = {
   experiences: string,
   educations: string,
   languages: string 
+  template: number;
 }
 
 export {

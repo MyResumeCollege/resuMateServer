@@ -15,6 +15,7 @@ type CreateResumeRequestBody = {
   experiences?: string;
   educations?: string;
   languages: string;
+  template: number;
 };
 
 async function checkIfPremium(req: Request, res: Response) {
@@ -93,7 +94,7 @@ const getResumeUrl = async (req: Request, res: Response) => {
 
     const resumeId = req.params.id;
     const resume = (await resumeModel.findById(resumeId)) as Resume;
-    if (!resume) {
+    if (!resume) {        
       res.status(404).json({ message: "Resume not found" });
       return;
     }
@@ -117,6 +118,7 @@ const upsertCv = async (
       experiences,
       educations,
       languages,
+      template
     } = req.body;
     const userId = req.params.userId;
 
@@ -139,6 +141,7 @@ const upsertCv = async (
               educations,
               skills,
               languages,
+              template
             },
           },
         }
@@ -153,6 +156,7 @@ const upsertCv = async (
         experiences,
         educations,
         languages,
+        template
       });
 
       const user = await UserModel.findById({ _id: userId });
