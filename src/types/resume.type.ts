@@ -54,4 +54,5 @@ export interface Resume extends mongoose.Document {
   educations?: string;
   languages: string;
   template: number;
+  resumeLanguage: string;
 }

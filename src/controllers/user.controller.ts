@@ -16,6 +16,7 @@ type CreateResumeRequestBody = {
   educations?: string;
   languages: string;
   template: number;
+  resumeLanguage: string;
 };
 
 async function checkIfPremium(req: Request, res: Response) {
@@ -75,7 +76,7 @@ const getResumePreviews = async (req: Request, res: Response) => {
       id: resume._id,
       creationDate: resume.createdAt,
       jobTitle: resume.jobTitle,
-    }));
+    }));    
 
     res.status(200).json(resumePreviews);
   } catch (error) {
@@ -118,16 +119,22 @@ const upsertCv = async (
       experiences,
       educations,
       languages,
-      template
+      template,
+      resumeLanguage
     } = req.body;
     const userId = req.params.userId;
 
     let savedResume = await ResumeModel.findOne({ resumePreviewId });
 
     if (savedResume != undefined) {
+      savedResume.fullName = fullName
+      savedResume.jobTitle = jobTitle
       savedResume.bio = bio;
       savedResume.experiences = experiences;
       savedResume.educations = educations;
+      savedResume.skills = skills
+      savedResume.languages = languages
+      savedResume.resumeLanguage = resumeLanguage
 
       await PreviewModel.updateOne(
         { id: resumePreviewId },
@@ -141,7 +148,8 @@ const upsertCv = async (
               educations,
               skills,
               languages,
-              template
+              template,
+              resumeLanguage
             },
           },
         }
@@ -156,7 +164,8 @@ const upsertCv = async (
         experiences,
         educations,
         languages,
-        template
+        template,
+        resumeLanguage
       });
 
       const user = await UserModel.findById({ _id: userId });

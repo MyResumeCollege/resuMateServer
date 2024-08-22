@@ -13,7 +13,7 @@ import {
 import {
   ResumeData,
   ResumeQuestionsData,
-  ResumePromptParams,
+  ResumePromptParams
 } from '../types/resumeData.type';
 
 const maxCharacterLimit = 100;
@@ -71,53 +71,6 @@ const requestCompletion = async (
     return response;
   } catch (error) {
     console.error('Error making completion request:', error);
-    throw error;
-  }
-};
-
-const translateResume = async ({
-  resumeLanguage,
-  bio,
-  experiences,
-  educations
-}: ResumeQuestionsData) => {
-  try {
-
-    const requestMessagesBio: Groq.Chat.Completions.ChatCompletionMessageParam[] =
-      [
-        {
-          role: 'user',
-          content: bio,
-        },
-        {
-          role: 'assistant',
-          content: `${bioPrompt} ,do it and give me all in ${resumeLanguage}:`,
-        },
-      ];
-    const requestMessagesExperiences: Groq.Chat.Completions.ChatCompletionMessageParam[] =
-      [
-        {
-          role: 'user',
-          content: `${experiences}`,
-        },
-        {
-          role: 'assistant',
-          content: `${experiencesPrompt} ,do it and give me all in ${resumeLanguage}:`,
-        },
-      ];
-
-    const [bioResponse, experiencesResponse] =
-      await Promise.all([
-        requestCompletion(requestMessagesBio),
-        requestCompletion(requestMessagesExperiences),
-      ]);
-
-    const bioRes = bioResponse.choices[0]?.message?.content || '';
-    const experiencesRes = experiencesResponse.choices[0]?.message?.content || '';
-
-    return [bioRes, experiencesRes];
-  } catch (error) {
-    console.error('Error generating resume:', error);
     throw error;
   }
 };
@@ -215,4 +168,4 @@ const generateSection = async (data: string) => {
   }
 };
 
-export { improveResume, generateResume, translateResume, generateSection };
+export { improveResume, generateResume, generateSection };

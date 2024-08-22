@@ -24,7 +24,7 @@ const updatePreviewModelAndSetUrlForPreview = async (req: Request, res: Response
 const getPreviewCV = async (req: Request, res: Response) => {
   const { id } = req.params;
   const data = await PreviewModel.findOne({ id });
-
+  
   if (data) res.json(data.resumeData);  
   else res.status(404).json({ error: "Data not found" });
 };
