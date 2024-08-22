@@ -57,7 +57,6 @@ const loginUser = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(400).send("user is not exists");
     }
-    // Check if the password correspond to the hashed password.
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw res.status(400).send("invalid password");

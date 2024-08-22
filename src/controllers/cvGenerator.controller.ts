@@ -1,5 +1,8 @@
-import { Request, Response } from 'express';
-import { generateResume, generateSection } from '../services/GroqAI.service';
+import { Request, Response } from "express";
+import {
+  generateResume,
+  generateSection
+} from "../services/GroqAI.service";
 
 const generateResumeFromScratch = async (req: Request, res: Response) => {
   try {    
@@ -22,8 +25,8 @@ const regenerateSectionOnResume = async (req: Request, res: Response) => {
     const sectionResponse = await generateSection(data)
     res.status(200).json(sectionResponse)
   } catch (err) {
-    console.error('Error generating section:', err);
-    res.status(500).send('Error generating section.');
+    console.error("Error generating section:", err);
+    res.status(500).send("Error generating section.");
   }
 };
 
