@@ -13,8 +13,7 @@ import {
 import {
   ResumeData,
   ResumeQuestionsData,
-  ResumePromptParams,
-  ResumeTranslatedData,
+  ResumePromptParams
 } from '../types/resumeData.type';
 
 const maxCharacterLimit = 100;
@@ -72,123 +71,6 @@ const requestCompletion = async (
     return response;
   } catch (error) {
     console.error('Error making completion request:', error);
-    throw error;
-  }
-};
-
-const translateResume = async ({
-  fullName,
-  jobTitle,
-  bio,
-  experiences,
-  educations,
-  skills,
-  languages,
-  language
-}: ResumeTranslatedData) => {
-
-  try {
-    const requestMessagesName: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
-      {
-        role: "user",
-        content: fullName,
-      },
-      {
-        role: "assistant",
-        content: `Translate the following sentence from source language to ${language}`
-      },
-    ];
-
-    const requestMessagesJobTitle: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
-      {
-        role: "user",
-        content: jobTitle,
-      },
-      {
-        role: "assistant",
-        content: `Translate the following sentence from source language to ${language}`
-      },
-    ];
-
-    const requestMessagesBio: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
-      {
-        role: "user",
-        content: bio,
-      },
-      {
-        role: "assistant",
-        content: `Translate the following sentence from source language to ${language}`
-      },
-    ];
-    
-    const requestMessagesExperiences: Groq.Chat.Completions.ChatCompletionMessageParam[] =
-      [
-        {
-          role: 'user',
-          content: experiences
-        },
-        {
-          role: 'assistant',
-          content: `Translate the following sentence from source language to ${language}`
-        },
-      ];
-
-    const requestMessagesEducations: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
-      {
-        role: "user",
-        content: educations
-      },
-      {
-        role: "assistant",
-        content: `Translate the following sentence from source language to ${language}`
-      },
-    ];
-
-    const requestMessagesSkills: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
-      {
-        role: "user",
-        content: skills
-      },
-      {
-        role: "assistant",
-        content: `Translate the following sentence from source language to ${language}`
-      },
-    ];
-
-    const requestMessagesLanguages: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
-      {
-        role: "user",
-        content: languages
-      },
-      {
-        role: "assistant",
-        content: `Translate the following sentence from source language to ${language}`
-      },
-    ];
-
-    const [nameResponse, jobResponse, bioResponse, experiencesResponse, educationsResponse, skillsResponse, langaugesResponse] =
-      await Promise.all([
-        requestCompletion(requestMessagesName),
-        requestCompletion(requestMessagesJobTitle),
-        requestCompletion(requestMessagesBio),
-        requestCompletion(requestMessagesExperiences),
-        requestCompletion(requestMessagesEducations),
-        requestCompletion(requestMessagesSkills),
-        requestCompletion(requestMessagesLanguages),
-      ]);
-
-    const nameRes = nameResponse.choices[0]?.message?.content || "";
-    const jobRes = jobResponse.choices[0]?.message?.content || "";
-    const bioRes = bioResponse.choices[0]?.message?.content || "";
-    const experiencesRes = experiencesResponse.choices[0]?.message?.content || "";
-    const educationsRes = educationsResponse.choices[0]?.message?.content || ""
-    const skillsRes = skillsResponse.choices[0]?.message?.content || ""
-    const langaugesRes = langaugesResponse.choices[0]?.message?.content || ""
-
-
-    return [nameRes, jobRes, bioRes, experiencesRes, educationsRes, skillsRes, langaugesRes];
-  } catch (error) {
-    console.error('Error generating resume:', error);
     throw error;
   }
 };
@@ -286,4 +168,4 @@ const generateSection = async (data: string) => {
   }
 };
 
-export { improveResume, generateResume, translateResume, generateSection };
+export { improveResume, generateResume, generateSection };
