@@ -12,7 +12,7 @@ export const getLinkedinProfileData = async (profileLink: string) => {
         profile_link: profileLink,
       },
       headers: headers,
-    });
+    });    
 
     return response.data;
   } catch (error) {

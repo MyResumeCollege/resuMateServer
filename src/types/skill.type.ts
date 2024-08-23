@@ -7,5 +7,7 @@ export const SKILL_LEVEL_NAME: Record<number, string> = {
   }
 
   export type Skill = {
-    name: string
-}
+    id: string;
+    name: string;
+    level: number;
+  }
