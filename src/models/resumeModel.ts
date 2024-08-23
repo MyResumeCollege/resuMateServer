@@ -11,6 +11,8 @@ const resumeSchema = new mongoose.Schema<Resume>({
   experiences: { type: String },
   educations: { type: String },
   languages: { type: String },
+  template: { type: Number },
+  resumeLanguage: { type: String }
 });
 
 const ResumeModel = mongoose.model<Document & Resume>('Resume', resumeSchema);

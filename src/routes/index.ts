@@ -5,15 +5,12 @@ import cvPreview from './cvRoute'
 import linkedinProfile from './linkedinData'
 import user from './user'
 import authRoute from './auth'
-import CvTranslator from './cvTranslator'
 import CvRoute from './cvRoute'
-import templates from './cvTemplates'
 
 // Export the base-router
 const baseRouter = Router()
 
-baseRouter.use('/resume', CvUploader, CvGenerator, CvTranslator, CvRoute)
-baseRouter.use('/templates', templates)
+baseRouter.use('/resume', CvUploader, CvGenerator, CvRoute)
 baseRouter.use('/linkedin', linkedinProfile)
 baseRouter.use('/auth', authRoute)
 baseRouter.use('/user', user)
