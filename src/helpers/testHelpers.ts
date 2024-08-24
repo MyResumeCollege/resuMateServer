@@ -21,6 +21,8 @@ export const createUserObject = (
 // Resume object builder function
 export const createResumeObject = (
   fullName: string,
+  phoneNumber: string,
+  email: string,
   jobTitle: string,
   bio: string,
   skills: string,
@@ -30,12 +32,14 @@ export const createResumeObject = (
 ): Partial<Resume> => {
   return {
     fullName,
+    phoneNumber,
+    email,
     jobTitle,
     bio,
     skills,
     experiences,
     educations,
-    languages,
+    languages
   };
 };
 // Register user function
@@ -117,19 +121,6 @@ export const generateResume = async (
     .post('/api/resume/generate-resume')
     .set('Authorization', `Bearer ${accessToken}`)
     .send(resumeData);
-};
-
-// Translate resume function
-export const translateResume = async (
-  app: Express,
-  resumeData: Partial<Resume>,
-  language: string,
-  accessToken: string
-) => {
-  return await request(app)
-    .post('/api/resume/translate-resume')
-    .set('Authorization', `Bearer ${accessToken}`)
-    .send({ ...resumeData, resumeLanguage: language });
 };
 
 // Set user premium status function

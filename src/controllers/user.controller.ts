@@ -8,9 +8,11 @@ import PreviewModel from "../models/previewModel";
 
 type CreateResumeRequestBody = {
   resumePreviewId?: string;
-  fullName?: string;
-  jobTitle?: string;
-  bio?: string;
+  fullName: string;
+  phoneNumber?: string;
+  email?: string;
+  jobTitle: string;
+  bio: string;
   skills: string;
   experiences?: string;
   educations?: string;
@@ -76,7 +78,7 @@ const getResumePreviews = async (req: Request, res: Response) => {
       id: resume._id,
       creationDate: resume.createdAt,
       jobTitle: resume.jobTitle,
-    }));    
+    }));
 
     res.status(200).json(resumePreviews);
   } catch (error) {
@@ -95,7 +97,7 @@ const getResumeUrl = async (req: Request, res: Response) => {
 
     const resumeId = req.params.id;
     const resume = (await resumeModel.findById(resumeId)) as Resume;
-    if (!resume) {        
+    if (!resume) {
       res.status(404).json({ message: "Resume not found" });
       return;
     }
@@ -113,6 +115,8 @@ const upsertCv = async (
     const {
       resumePreviewId,
       fullName,
+      phoneNumber,
+      email,
       jobTitle,
       bio,
       skills,
@@ -127,14 +131,16 @@ const upsertCv = async (
     let savedResume = await ResumeModel.findOne({ resumePreviewId });
 
     if (savedResume != undefined) {
-      savedResume.fullName = fullName
-      savedResume.jobTitle = jobTitle
+      savedResume.fullName = fullName;
+      savedResume.phoneNumber = phoneNumber;
+      savedResume.email = email;
+      savedResume.jobTitle = jobTitle;
       savedResume.bio = bio;
       savedResume.experiences = experiences;
       savedResume.educations = educations;
-      savedResume.skills = skills
-      savedResume.languages = languages
-      savedResume.resumeLanguage = resumeLanguage
+      savedResume.skills = skills;
+      savedResume.languages = languages;
+      savedResume.resumeLanguage = resumeLanguage;
 
       await PreviewModel.updateOne(
         { id: resumePreviewId },
@@ -142,6 +148,8 @@ const upsertCv = async (
           $set: {
             resumeData: {
               fullName,
+              phoneNumber,
+              email,
               jobTitle,
               bio,
               experiences,
@@ -165,7 +173,7 @@ const upsertCv = async (
         educations,
         languages,
         template,
-        resumeLanguage
+        resumeLanguage,
       });
 
       const user = await UserModel.findById({ _id: userId });
@@ -203,11 +211,9 @@ const deleteCv = async (req: Request, res: Response) => {
     );
 
     if (userResult.modifiedCount === 0) {
-      return res
-        .status(404)
-        .json({
-          message: "User not found or resumeId not in user's resumes array",
-        });
+      return res.status(404).json({
+        message: "User not found or resumeId not in user's resumes array",
+      });
     }
 
     await PreviewModel.deleteOne({ id: resumeId });

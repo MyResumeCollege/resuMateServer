@@ -5,6 +5,8 @@ const resumeSchema = new mongoose.Schema<Resume>({
   resumePreviewId: { type: String },
   createdAt: { type: Date, required: true, default: Date.now },
   fullName: { type: String },
+  phoneNumber: { type: String },
+  email: { type: String },
   jobTitle: { type: String },
   bio: { type: String },
   skills: { type: String },

@@ -47,16 +47,18 @@ type EducationPeriod = {
 };
 
 type ResumeResponse = {
-  fullName: string,
-  jobTitle: string,
-  bio: string,
-  skills: string,
-  experiences: string,
-  educations: string,
-  languages: string 
+  fullName: string;
+  phoneNumber: string;
+  email: string;
+  jobTitle: string;
+  bio: string;
+  skills: string;
+  experiences: string;
+  educations: string;
+  languages: string;
   template: number;
   resumeLanguage: string;
-}
+};
 
 export {
   ResumeData,
