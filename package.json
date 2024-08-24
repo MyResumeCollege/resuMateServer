@@ -5,7 +5,7 @@
   "scripts": {
     "test": "jest --detectOpenHandles --coverage --forceExit",
     "start": "tsc && node ./dist/server.js",
-    "prod": "rm -r -f ./public/client && cp -a ../resuMate/resumate/dist ./public/client && tsc && node ./dist/server.js",
+    "prod": "rm -r -f ./public/client && cp -a ../resuMateClient/resumate/dist ./public/client && tsc && node ./dist/server.js",
     "dev": "tsnd --respawn --files ./src/server.ts",
     "tsc": "tsc"
   },
