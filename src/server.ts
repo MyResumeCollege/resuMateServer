@@ -7,7 +7,7 @@ initApp()
     let server: Server;
     let port: string | number = process.env.PORT || 3000;
 
-    app.use(express.static('public'))
+    app.use("/public", express.static("public"));
 
     app.use("*", (_, res) => {
       res.sendFile("client/index.html", { root: "public" });
