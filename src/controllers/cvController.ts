@@ -14,9 +14,10 @@ const downloadCV = async (req: Request, res: Response): Promise<void> => {
 
 const updatePreviewModelAndSetUrlForPreview = async (req: Request, res: Response) => {
   const resumeResponse: ResumeResponse = req.body;
-  const id = req.params.id || uuidv4();
+  const id = uuidv4();
   
   const preview = new PreviewModel({ id, resumeData: resumeResponse });
+  
   await preview.save();
   res.status(200).json({ url: `${process.env.FRONTEND_URL}/preview/${id}/clear` });
 };
