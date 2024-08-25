@@ -20,15 +20,15 @@ type ExperiencePeriod = {
 
 type ResumeQuestionsData = {
   bio: string;
-  experiences: ExperiencePeriod[];
+  experiences: string[];
   resumeLanguage?: string;
-  educations: EducationPeriod[];
+  educations: string[];
 };
 
 type ResumePromptParams = {
   bio?: string;
-  experiences?: ExperiencePeriod[];
-  educations?: EducationPeriod[];
+  experiences?: string[];
+  educations?: string[];
 };
 
 type EducationPeriodTime = {
@@ -53,8 +53,8 @@ type ResumeResponse = {
   jobTitle: string;
   bio: string;
   skills: string;
-  experiences: string;
-  educations: string;
+  experiences: string[];
+  educations: string[];
   languages: string;
   template: number;
   resumeLanguage: string;
