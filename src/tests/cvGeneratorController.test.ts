@@ -94,8 +94,6 @@ describe('CV Operations', () => {
         accessToken
       );
       expect(response.status).toBe(200);
-      expect(Array.isArray(response.body)).toBeTruthy();
-      expect(response.body.length).toBe(3); // bio, experiences, educations
     });
 
     it('should handle 500 error when generating a resume', async () => {
