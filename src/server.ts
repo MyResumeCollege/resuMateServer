@@ -1,5 +1,7 @@
 import express from 'express';
-import http, { Server } from 'http';
+import fs from 'fs';
+import { Server } from 'http';
+import https from 'https';
 import initApp from './app';
 
 initApp()
@@ -13,11 +15,15 @@ initApp()
       res.sendFile("client/index.html", { root: "public" });
     });
 
-    server = http.createServer(app);
+    const httpServerOptions = {
+      key: fs.readFileSync("../../certs/client-key.pem"),
+      cert: fs.readFileSync("../../certs/client-cert.pem"),
+    };
+    server = https.createServer(httpServerOptions, app);
 
     server
       .listen(port, () => {
-        console.log(`Server running on http://localhost:${port}`);
+        console.log(`Server running on https://localhost:${port}`);
       })
       .on('error', (err) => {
         console.error('Error creating HTTP server:', err.message);
