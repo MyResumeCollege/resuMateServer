@@ -3,6 +3,7 @@ import fs from 'fs';
 import { Server } from 'http';
 import https from 'https';
 import initApp from './app';
+import path from 'path';
 
 initApp()
   .then((app) => {
@@ -16,8 +17,8 @@ initApp()
     });
 
     const httpServerOptions = {
-      key: fs.readFileSync("./certs/client-key.pem"),
-      cert: fs.readFileSync("./certs/client-cert.pem"),
+      key: fs.readFileSync(path.resolve(__dirname, '../../certs/client-key.pem')),
+      cert: fs.readFileSync(path.resolve(__dirname, '../../certs/client-cert.pem')),
     };
     server = https.createServer(httpServerOptions, app);
 
