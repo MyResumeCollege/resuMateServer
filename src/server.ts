@@ -16,8 +16,8 @@ initApp()
     });
 
     const httpServerOptions = {
-      key: fs.readFileSync("../../certs/client-key.pem"),
-      cert: fs.readFileSync("../../certs/client-cert.pem"),
+      key: fs.readFileSync("./certs/client-key.pem"),
+      cert: fs.readFileSync("./certs/client-cert.pem"),
     };
     server = https.createServer(httpServerOptions, app);
 
