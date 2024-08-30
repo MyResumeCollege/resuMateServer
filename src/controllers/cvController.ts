@@ -7,7 +7,6 @@ import PreviewModel from '../models/previewModel';
 const downloadCV = async (req: Request, res: Response): Promise<void> => {
   try {
     await downloadResume(req, res);
-    res.status(200).json({ message: 'PDF generated successfully' });
   } catch (err) {
     res.status(500).send('Error generating PDF');
   }
