@@ -11,7 +11,7 @@ const generateResumeFromScratch = async (req: Request, res: Response) => {
       bio,
       experiences,
       educations
-    })
+    })    
     res.status(200).json(CVUploadResponse)
   } catch (err) {
     console.error('Error generating resume:', err);
