@@ -1,137 +1,236 @@
 import request from 'supertest';
 import { Express } from 'express';
-import { IUser } from '../types/user.type';
 import { Resume } from '../types/resume.type';
+import { IUser } from '../types/user.type';
 
-// Test helper function
-// User object builder function
+// User related functions
+
 export const createUserObject = (
+  name: string,
   email: string,
-  password: string,
-  name: string
+  password: string
 ): Partial<IUser> => {
   return {
+    name,
     email,
     password,
-    name,
-    isPremium: false,
   };
 };
 
-// Resume object builder function
-export const createResumeObject = (
-  fullName: string,
-  phoneNumber: string,
-  email: string,
-  jobTitle: string,
-  bio: string,
-  skills: string,
-  experiences: string,
-  educations: string,
-  languages: string
-): Partial<Resume> => {
-  return {
-    fullName,
-    phoneNumber,
-    email,
-    jobTitle,
-    bio,
-    skills,
-    experiences,
-    educations,
-    languages
-  };
-};
-// Register user function
 export const registerUser = async (app: Express, user: Partial<IUser>) => {
-  return await request(app).post('/api/auth/register').send(user);
+  const response = await request(app).post('/api/auth/register').send(user);
+  return response;
 };
 
-// Login user function
-export const loginUser = async (
+// Login account function //
+export const loginAccount = async (
   app: Express,
   email: string,
   password: string
 ) => {
-  return await request(app).post('/api/auth/login').send({ email, password });
+  const response = await request(app)
+    .post('/api/auth/login')
+    .send({ email, password });
+  return response;
 };
 
-// Logout user function
+// Logout account function //
 export const logoutUser = async (app: Express, refreshToken: string) => {
-  return await request(app)
+  const response = await request(app)
     .post('/api/auth/logout')
-    .set('Authorization', `Bearer ${refreshToken}`);
+    .set('Authorization', `JWT ${refreshToken}`);
+  return response;
 };
 
-// Get user resume previews function
-export const getUserResumePreviews = async (
+export const checkIfPremium = async (
   app: Express,
   userId: string,
   accessToken: string
 ) => {
-  return await request(app)
-    .get(`/api/user/${userId}/resume-previews`)
+  const response = await request(app)
+    .get(`/api/user/${userId}/is-premium`)
     .set('Authorization', `Bearer ${accessToken}`);
+  return response;
 };
 
-// Create or update resume function
-export const upsertResume = async (
+export const setPremium = async (
+  app: Express,
+  userId: string,
+  isPremium: boolean
+) => {
+  return request(app)
+    .post(`/api/user/${userId}/set-premium`)
+    .send({ isPremium });
+};
+
+// Resume related functions
+
+export const createResumeObject = (
+  fullName: string,
+  jobTitle: string,
+  bio: string,
+  skills: string,
+  languages: string,
+  template: number,
+  resumeLanguage: string
+): Partial<Resume> => {
+  return {
+    fullName,
+    jobTitle,
+    bio,
+    skills,
+    languages,
+    template,
+    resumeLanguage,
+  };
+};
+
+export const upsertCv = async (
   app: Express,
   userId: string,
   resume: Partial<Resume>,
   accessToken: string
 ) => {
-  return await request(app)
+  const response = await request(app)
     .post(`/api/user/${userId}/upsert`)
     .set('Authorization', `Bearer ${accessToken}`)
     .send(resume);
+  return response;
 };
 
-// Get resume by ID function
-export const getResumeById = async (
+export const getResumePreviews = async (
+  app: Express,
+  userId: string,
+  accessToken: string
+) => {
+  const response = await request(app)
+    .get(`/api/user/${userId}/resume-previews`)
+    .set('Authorization', `Bearer ${accessToken}`);
+  return response;
+};
+
+export const getResumeUrl = async (
   app: Express,
   userId: string,
   resumeId: string,
   accessToken: string
 ) => {
-  return await request(app)
+  const response = await request(app)
     .get(`/api/user/${userId}/${resumeId}`)
     .set('Authorization', `Bearer ${accessToken}`);
+  return response;
 };
 
-// Delete resume function
 export const deleteResume = async (
   app: Express,
   userId: string,
   resumeId: string,
   accessToken: string
 ) => {
-  return await request(app)
+  const response = await request(app)
     .delete(`/api/user/${userId}/${resumeId}`)
     .set('Authorization', `Bearer ${accessToken}`);
+  return response;
 };
 
-// Generate resume function
-export const generateResume = async (
+// CV generation and preview functions
+
+export const generateResumeFromScratch = async (
   app: Express,
-  resumeData: Partial<Resume>,
+  data: any,
   accessToken: string
 ) => {
-  return await request(app)
+  const response = await request(app)
     .post('/api/resume/generate-resume')
     .set('Authorization', `Bearer ${accessToken}`)
-    .send(resumeData);
+    .send(data);
+  return response;
 };
 
-// Set user premium status function
-export const setUserPremiumStatus = async (
+export const regenerateSection = async (
   app: Express,
-  userId: string,
-  isPremium: boolean,
+  data: any,
   accessToken: string
 ) => {
-  return await request(app)
-    .post(`/api/user/${userId}/set-premium`)
+  const response = await request(app)
+    .post('/api/resume/generate-section')
     .set('Authorization', `Bearer ${accessToken}`)
-    .send({ isPremium });
+    .send(data);
+  return response;
+};
+
+export const createPreview = async (
+  app: Express,
+  data: any,
+  accessToken: string
+) => {
+  const response = await request(app)
+    .post('/api/preview/create-preview')
+    .set('Authorization', `Bearer ${accessToken}`)
+    .send(data);
+  return response;
+};
+
+export const getPreviewCV = async (
+  app: Express,
+  previewId: string,
+  accessToken: string
+) => {
+  const response = await request(app)
+    .get(`/api/preview/${previewId}`)
+    .set('Authorization', `Bearer ${accessToken}`);
+  return response;
+};
+
+// LinkedIn related function
+
+export const fetchLinkedinProfileData = async (
+  app: Express,
+  profileLink: string,
+  accessToken: string
+) => {
+  const response = await request(app)
+    .post('/api/linkedin/profile-data')
+    .set('Authorization', `Bearer ${accessToken}`)
+    .send({ profile_link: profileLink });
+  return response;
+};
+
+// CV upload function
+
+export const uploadResume = async (
+  app: Express,
+  file: Buffer,
+  accessToken: string
+) => {
+  const response = await request(app)
+    .post('/api/resume/upload-resume')
+    .set('Authorization', `Bearer ${accessToken}`)
+    .attach('file', file, 'resume.pdf');
+  return response;
+};
+
+// Password reset functions
+
+export const generateResetToken = async (app: Express, email: string) => {
+  const response = await request(app)
+    .post('/api/auth/forgot-password')
+    .send({ email });
+  return response;
+};
+
+export const verifyResetToken = async (app: Express, token: string) => {
+  const response = await request(app).get(`/api/auth/reset-password/${token}`);
+  return response;
+};
+
+export const resetPassword = async (
+  app: Express,
+  token: string,
+  password: string
+) => {
+  const response = await request(app)
+    .post(`/api/auth/reset-password/${token}`)
+    .send({ password });
+  return response;
 };

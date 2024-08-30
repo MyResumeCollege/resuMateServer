@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --coverage --forceExit",
+    "test": "tsc && jest --detectOpenHandles --forceExit --coverage",
+    "testUser": "tsc && jest --detectOpenHandles --forceExit --coverage ./src/tests/cvGeneratorController.test.ts",
     "start": "tsc && node ./dist/server.js",
     "prod": "cd ../resuMateClient/resumate && git pull && npm run build && cd ../../resuMateServer && rm -r -f ./public/client && cp -a ../resuMateClient/resumate/dist ./public/client && tsc && node ./dist/server.js",
     "dev": "tsnd --respawn --files ./src/server.ts",
@@ -41,15 +42,17 @@
     "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/lodash": "^4.17.7",
-    "@types/node": "^20.14.6",
+    "@types/node": "^20.16.1",
     "@types/nodemailer": "^6.4.15",
     "@types/pdf-parse": "^1.1.4",
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",
     "jest": "^29.7.0",
+    "jest-mock-req-res": "^1.0.2",
     "mongodb-memory-server": "^10.0.0",
     "supertest": "^7.0.0",
-    "ts-jest": "^29.2.4",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "typescript": "^5.5.2"
   }
 }
