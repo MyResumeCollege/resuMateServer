@@ -52,7 +52,7 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
     const userLinkedinData = {
       name,
       bio: summary,
-      skills: linkedinSkills,
+      skills: linkedinSkills.slice(0, 10),
       experiencePeriods,
       educationPeriods,
     };
