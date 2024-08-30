@@ -5,6 +5,7 @@ import resumeModel from '../models/resumeModel';
 import ResumeModel from '../models/resumeModel';
 import mongoose from 'mongoose';
 import PreviewModel from '../models/previewModel';
+import { EducationPeriod, ExperiencePeriod } from '../types/resumeData.type';
 
 type CreateResumeRequestBody = {
   resumePreviewId?: string;
@@ -14,8 +15,8 @@ type CreateResumeRequestBody = {
   jobTitle: string;
   bio: string;
   skills: string;
-  experiences?: string;
-  educations?: string;
+  experiences?: ExperiencePeriod[];
+  educations?: EducationPeriod[];
   languages: string;
   template: number;
   resumeLanguage: string;
@@ -96,7 +97,7 @@ const getResumeUrl = async (req: Request, res: Response) => {
     }
 
     const resumeId = req.params.id;
-    const resume = (await resumeModel.findById(resumeId)) as Resume;
+    const resume = (await resumeModel.findById(resumeId)) as Resume;    
     if (!resume) {
       res.status(404).json({ message: 'Resume not found' });
       return;
@@ -125,11 +126,12 @@ const upsertCv = async (
       languages,
       template,
       resumeLanguage,
-    } = req.body;
+    } = req.body;    
+
     const userId = req.params.userId;
 
     let savedResume = await ResumeModel.findOne({ resumePreviewId });
-
+    
     if (savedResume != undefined) {
       savedResume.fullName = fullName;
       savedResume.phoneNumber = phoneNumber;
@@ -174,7 +176,7 @@ const upsertCv = async (
         languages,
         template,
         resumeLanguage,
-      });
+      });      
 
       const user = await UserModel.findById({ _id: userId });
       if (!user) {

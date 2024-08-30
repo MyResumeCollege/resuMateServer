@@ -50,8 +50,8 @@ export interface Resume extends mongoose.Document {
   jobTitle: string;
   bio: string;
   skills: string;
-  experiences?: string;
-  educations: string;
+  experiences: ExperiencePeriod[];
+  educations: EducationPeriod[]; 
   languages: string;
   phoneNumber?: string;
   email?: string;
