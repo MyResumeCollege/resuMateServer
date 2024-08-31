@@ -46,7 +46,7 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
     const linkedinSkills: Skill[] = skills.map((skill) => ({
       id: uniqueId("skillid"),
       name: skill.name,
-      level: 1,
+      level: 3,
     }));
 
     const userLinkedinData = {
