@@ -31,7 +31,6 @@ const initApp = async (): Promise<Express> => {
     app.use(express.urlencoded({ limit: '10mb', extended: true }))
 
     app.use('/api', BaseRouter)
-    app.use('/templates', express.static('public/templates'))
     console.log('Static files served from:', path.join(__dirname, '/public'))
 
     return app

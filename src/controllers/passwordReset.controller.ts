@@ -58,13 +58,11 @@ const generateResetToken = async (req: Request, res: Response) => {
     try {
       await transporter.sendMail(mailOptions);
     } catch (emailError) {
-      console.error('Error sending email:', emailError);
       throw emailError;
     }
 
     res.status(200).json({ message: 'Reset token generated and email sent' });
   } catch (error) {
-    console.error('Error in generateResetToken:', error);
     res
       .status(500)
       .json({ message: 'Error generating reset token', error: error.message });

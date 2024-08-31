@@ -33,7 +33,6 @@ export const downloadResume = async (req: Request, res: Response): Promise<void>
     res.setHeader('Content-Disposition', 'attachment; filename="cv.pdf"');
     res.send(pdfBuffer);
   } catch (error) {
-    console.error('Error generating PDF:', error);
     res.status(500).send('Error generating PDF');
   }
 };

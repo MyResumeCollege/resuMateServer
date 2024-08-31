@@ -14,7 +14,6 @@ const generateResumeFromScratch = async (req: Request, res: Response) => {
     })
     res.status(200).json(CVUploadResponse)
   } catch (err) {
-    console.error('Error generating resume:', err);
     res.status(500).send('Error generating resume.');
   }
 };
@@ -25,7 +24,6 @@ const regenerateSectionOnResume = async (req: Request, res: Response) => {
     const sectionResponse = await generateSection(data)
     res.status(200).json(sectionResponse)
   } catch (err) {
-    console.error("Error generating section:", err);
     res.status(500).send("Error generating section.");
   }
 };
