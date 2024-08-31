@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import CvUploader from './cvUploader'
 import CvGenerator from './cvGenerator'
 import cvPreview from './cvRoute'
 import linkedinProfile from './linkedinData'
@@ -10,7 +9,7 @@ import CvRoute from './cvRoute'
 // Export the base-router
 const baseRouter = Router()
 
-baseRouter.use('/resume', CvUploader, CvGenerator, CvRoute)
+baseRouter.use('/resume', CvGenerator, CvRoute)
 baseRouter.use('/linkedin', linkedinProfile)
 baseRouter.use('/auth', authRoute)
 baseRouter.use('/user', user)
