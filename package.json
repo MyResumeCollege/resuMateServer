@@ -6,7 +6,7 @@
     "test": "tsc && jest --detectOpenHandles --forceExit --coverage",
     "testUser": "tsc && jest --detectOpenHandles --forceExit --coverage ./src/tests/cvGeneratorController.test.ts",
     "start": "tsc && node ./dist/server.js",
-    "prod": "cd ../resuMateClient/resumate && git pull && npm run build && cd ../../resuMateServer && rm -r -f ./public/client && cp -a ../resuMateClient/resumate/dist ./public/client && tsc && sudo pm2 restart resumate",
+    "prod": "cd ../resuMateClient/resumate && git pull && npm run build && cd ../../resuMateServer && rm -r -f ./public/client && cp -a ../resuMateClient/resumate/dist ./public/client && tsc && sudo pm2 restart server",
     "dev": "tsnd --respawn --files ./src/server.ts",
     "tsc": "tsc"
   },
