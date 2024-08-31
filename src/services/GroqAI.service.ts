@@ -44,7 +44,6 @@ const improveResume = async ({ detailedCV }: ResumeData) => {
 
     return resume;
   } catch (error) {
-    console.error('Error generating resume:', error);
     throw error;
   }
 };
@@ -67,7 +66,6 @@ const requestCompletion = async (
 
     return response;
   } catch (error) {
-    console.error('Error making completion request:', error);
     throw error;
   }
 };
@@ -133,7 +131,6 @@ const generateResume = async ({
       educations: educationsRes,
     };
   } catch (error) {
-    console.error('Error generating resume:', error);
     throw error;
   }
 };
@@ -157,7 +154,6 @@ const generateSection = async (data: string) => {
 
     return sectionRes;
   } catch (error) {
-    console.error('Error generating section:', error);
     throw error;
   }
 };

@@ -15,7 +15,6 @@ const generateResumeFromExistCV = async (req: Request, res: Response) => {
 
     res.json({ CVUploadResponse })
   } catch (err) {
-    console.error('Error uploading file:', err)
     res.status(500).send('Error uploading file.')
   }
 }
