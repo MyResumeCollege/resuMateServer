@@ -34,9 +34,6 @@ const generateResetToken = async (req: Request, res: Response) => {
 
   try {
     const user = await UserModel.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
 
     const resetToken = crypto.randomBytes(20).toString('hex');
     const resetTokenExpiry = Date.now() + 3600000; // Token expires in 1 hour
