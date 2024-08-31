@@ -1,31 +1,14 @@
-import {
-  EducationPeriod,
-  ExperiencePeriod,
-} from "../types/resumeData.type";
-
-type ResumePromptParams = {
-  bio?: string;
-  experiences?: ExperiencePeriod[];
-  educations?: EducationPeriod[];
-};
-
-const SKILL_LEVEL_NAME: Record<number, string> = {
-  1: "Novice",
-  2: "Beginner",
-  3: "Skillful",
-  4: "Experienced",
-  5: "Expert",
-};
-
-export const rewritePrompt = "Rewrite the following description to be concise and highlight key points in two sentences: [provided description]"
+export const rewritePrompt =
+  "Rewrite the following description to be concise and highlight key points in two sentences: [provided description]";
 
 export const bioPrompt =
   "Generate a professional bio summarizing achievements and qualifications based on the provided details. Highlight key accomplishments, skills, and areas of expertise in a concise and impactful manner, limited to 3-4 sentences, without introductory text.";
 
 export const experiencesPrompt =
-  "Write the experience section clearly and concisely, without using bullet points. Present each role and responsibility directly and straightforwardly"
+"Describe role and responsibility clearly and concisely, focusing on the tasks and achievements without mentioning company names or dates."
 
-export const educationPrompt = "Briefly describe your education, including significant projects or accomplishments, in two sentences."
+export const educationPrompt =
+  "Summarize your most important educational achievements or projects in 20 words or fewer, without using special characters or formatting like asterisks.";
 
 export const improveResumePrompt = `
     generate a resume based solely on the provided information without adding additional details.
@@ -58,44 +41,6 @@ export const improveResumePrompt = `
     [Include any other pertinent details, such as certifications, awards, or memberships in professional organizations]
 `.trim();
 
-export const generateBioPrompt = ({ bio = '' }: ResumePromptParams) => {
-  return bio ? `[Professional Summary]:\n${bio}` : '';
-};
-
-export const generateExperiencesPrompt = ({
-  experiences = [],
-}: ResumePromptParams) => {
-  return experiences.length > 0
-    ? experiences
-        .map((experience) => {
-          const endDate = experience.isCurrent
-            ? "current"
-            : `${experience.endDate?.year || ""}`;
-          return (
-            `${experience.jobTitle} at ${experience.employer}\n` +
-            `  Description: ${experience.description}, City: ${experience.city}\n` +
-            `  ${experience.startDate.year} - ${endDate}`
-          );
-        })
-        .join("\n\n")
-    : "";
-};
-
-export const generateEducationsPrompt = ({
-  educations = [],
-}: ResumePromptParams) => {
-  return educations.length > 0
-    ? educations
-        .map((education) => {
-          const endDate = education.isCurrent
-            ? "current"
-            : `${education.endDate?.year || ""}`;
-          return (
-            `${education.degree} at ${education.school}\n` +
-            `  Description: ${education.description}\n` +
-            `  ${education.startDate.year} - ${endDate}`
-          );
-        })
-        .join("\n\n")
-    : "";
+export const generateBioPrompt = (bio: string) => {
+  return bio ? `[Professional Summary]:\n${bio}` : "";
 };

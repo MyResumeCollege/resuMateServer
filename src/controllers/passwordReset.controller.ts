@@ -34,9 +34,6 @@ const generateResetToken = async (req: Request, res: Response) => {
 
   try {
     const user = await UserModel.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
 
     const resetToken = crypto.randomBytes(20).toString('hex');
     const resetTokenExpiry = Date.now() + 3600000; // Token expires in 1 hour
@@ -58,13 +55,11 @@ const generateResetToken = async (req: Request, res: Response) => {
     try {
       await transporter.sendMail(mailOptions);
     } catch (emailError) {
-      console.error('Error sending email:', emailError);
       throw emailError;
     }
 
     res.status(200).json({ message: 'Reset token generated and email sent' });
   } catch (error) {
-    console.error('Error in generateResetToken:', error);
     res
       .status(500)
       .json({ message: 'Error generating reset token', error: error.message });

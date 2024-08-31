@@ -214,7 +214,7 @@ export const uploadResume = async (
 
 export const generateResetToken = async (app: Express, email: string) => {
   const response = await request(app)
-    .post('/api/auth/forgot-password')
+    .post('/api/auth/forget-password')
     .send({ email });
   return response;
 };

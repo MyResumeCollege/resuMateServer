@@ -16,6 +16,6 @@ export const getLinkedinProfileData = async (profileLink: string) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching LinkedIn profile data:", error);
+    throw error
   }
 };

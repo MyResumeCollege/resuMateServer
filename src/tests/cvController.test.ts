@@ -59,27 +59,6 @@ describe('CV Controller', () => {
       expect(savedPreview).toBeTruthy();
       expect(savedPreview?.resumeData).toEqual(resumeData);
     });
-
-    it('should use provided ID if available', async () => {
-      const resumeData = {
-        fullName: 'Jane Doe',
-        jobTitle: 'Designer',
-      };
-      const customId = 'custom-id-123';
-
-      const response = await request(app)
-        .post(`/api/resume/create-preview/${customId}`)
-        .send(resumeData);
-
-      expect(response.status).toBe(200);
-      expect(response.body.url).toBe(
-        `http://localhost:5173/preview/${customId}/clear`
-      );
-
-      const savedPreview = await PreviewModel.findOne({ id: customId });
-      expect(savedPreview).toBeTruthy();
-      expect(savedPreview?.resumeData).toEqual(resumeData);
-    });
   });
 
   describe('getPreviewCV', () => {

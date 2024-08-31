@@ -1,22 +1,19 @@
 import Groq from 'groq-sdk';
 import {
   improveResumePrompt,
-  generateExperiencesPrompt,
   experiencesPrompt,
   bioPrompt,
   rewritePrompt,
   generateBioPrompt,
-  generateEducationsPrompt,
   educationPrompt
 } from "../prompts/resumePrompts";
 
 import {
   ResumeData,
-  ResumeQuestionsData,
-  ResumePromptParams
+  ResumeQuestionsData
 } from '../types/resumeData.type';
 
-const maxCharacterLimit = 100;
+const maxCharacterLimit = 40;
 
 const improveResume = async ({ detailedCV }: ResumeData) => {
   try {
@@ -47,7 +44,6 @@ const improveResume = async ({ detailedCV }: ResumeData) => {
 
     return resume;
   } catch (error) {
-    console.error('Error generating resume:', error);
     throw error;
   }
 };
@@ -62,7 +58,7 @@ const requestCompletion = async (
       model: 'llama-3.1-8b-instant',
       messages,
       temperature: 1,
-      max_tokens: 1000,
+      max_tokens: maxCharacterLimit,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
@@ -70,7 +66,6 @@ const requestCompletion = async (
 
     return response;
   } catch (error) {
-    console.error('Error making completion request:', error);
     throw error;
   }
 };
@@ -79,23 +74,11 @@ const generateResume = async ({
   bio,
   experiences,
   educations}: ResumeQuestionsData) => {
-  try {
-    const bioParams: ResumePromptParams = {
-      bio
-    };
-
-    const experiencesParams: ResumePromptParams = {
-      experiences,
-    };
-
-    const educationsParams: ResumePromptParams = {
-      educations
-    }
-
+  try {    
     const requestMessagesBio: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
       {
         role: "user",
-        content: generateBioPrompt(bioParams),
+        content: generateBioPrompt(bio),
       },
       {
         role: "assistant",
@@ -103,43 +86,51 @@ const generateResume = async ({
       },
     ];
     
-    const requestMessagesExperiences: Groq.Chat.Completions.ChatCompletionMessageParam[] =
-      [
-        {
-          role: 'user',
-          content: generateExperiencesPrompt(experiencesParams),
-        },
-        {
-          role: 'assistant',
-          content: experiencesPrompt
-        },
-      ];
+    const requestMessagesExperiences: Groq.Chat.Completions.ChatCompletionMessageParam[][] = experiences.map((experience) => [
+      {
+        role: 'user',
+        content: experience,
+      },
+      {
+        role: 'assistant',
+        content: experiencesPrompt,
+      },
+    ]);
+    
 
-    const requestMessagesEducations: Groq.Chat.Completions.ChatCompletionMessageParam[] = [
+    const requestMessagesEducations: Groq.Chat.Completions.ChatCompletionMessageParam[][] = educations.map((education) => [
       {
         role: "user",
-        content: generateEducationsPrompt(educationsParams),
+        content: education
       },
       {
         role: "assistant",
         content: educationPrompt
       },
-    ];
+    ])
 
     const [bioResponse, experiencesResponse, educationsResponse] =
       await Promise.all([
         requestCompletion(requestMessagesBio),
-        requestCompletion(requestMessagesExperiences),
-        requestCompletion(requestMessagesEducations),
+        Promise.all(requestMessagesExperiences.map(requestCompletion)),
+        Promise.all(requestMessagesEducations.map(requestCompletion)),
       ]);
 
     const bioRes = bioResponse.choices[0]?.message?.content || "";
-    const experiencesRes = experiencesResponse.choices[0]?.message?.content || "";
-    const educationsRes = educationsResponse.choices[0]?.message?.content || ""
+    const experiencesRes = experiencesResponse.map(
+      (response) => response.choices[0]?.message?.content || ""
+    );
 
-    return [bioRes, experiencesRes, educationsRes];
+    const educationsRes = educationsResponse.map(
+      (response) => response.choices[0]?.message?.content || ""
+    );        
+
+    return {
+      bio: bioRes,
+      experiences: experiencesRes,
+      educations: educationsRes,
+    };
   } catch (error) {
-    console.error('Error generating resume:', error);
     throw error;
   }
 };
@@ -163,7 +154,6 @@ const generateSection = async (data: string) => {
 
     return sectionRes;
   } catch (error) {
-    console.error('Error generating section:', error);
     throw error;
   }
 };

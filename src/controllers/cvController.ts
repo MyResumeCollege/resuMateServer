@@ -17,9 +17,10 @@ const updatePreviewModelAndSetUrlForPreview = async (
   res: Response
 ) => {
   const resumeResponse: ResumeResponse = req.body;
-  const id = req.params.id || uuidv4();
-
+  const id = uuidv4();
+  
   const preview = new PreviewModel({ id, resumeData: resumeResponse });
+  
   await preview.save();
   res
     .status(200)
