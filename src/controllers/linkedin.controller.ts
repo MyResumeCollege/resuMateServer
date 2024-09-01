@@ -22,7 +22,7 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
       experience,
     } = data;
 
-    const experiencePeriods: ExperiencePeriod[] = experience.map((exp) => ({
+    const experiencePeriods: ExperiencePeriod[] = (experience || []).map((exp) => ({
       id: uniqueId("periodid"),
       jobTitle: exp.title,
       employer: exp.organisation.name || "",
@@ -43,7 +43,7 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
       description: "",
     }));
 
-    const educationPeriods: EducationPeriod[] = education.map((edu) => ({
+    const educationPeriods: EducationPeriod[] = (education || []).map((edu) => ({
       id: uniqueId("periodid"),
       degree: edu.fieldOfStudy,
       school: edu.institutionName,
@@ -63,7 +63,7 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
       isCurrent: false,
     }));
 
-    const linkedinSkills: Skill[] = skills.map((skill) => ({
+    const linkedinSkills: Skill[] = (skills || []).map((skill) => ({
       id: uniqueId("skillid"),
       name: skill.name,
       level: 3,
@@ -72,7 +72,7 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
     const userLinkedinData = {
       name,
       bio: summary,
-      skills: linkedinSkills.slice(0, 10),
+      skills: (linkedinSkills || []).slice(0, 10),
       experiencePeriods,
       educationPeriods,
     };
