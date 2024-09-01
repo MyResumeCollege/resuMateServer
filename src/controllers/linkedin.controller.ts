@@ -6,7 +6,7 @@ import { EducationPeriod, ExperiencePeriod } from "../types/resumeData.type";
 
 const fetchLinkedinProfileData = async (req: Request, res: Response) => {
   const { profile_link } = req.body;
-  
+
   if (!profile_link) {
     return res.status(400).send("Profile link is required");
   }
@@ -20,17 +20,27 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
       education,
       skills,
       experience,
-    } = data;    
+    } = data;
 
     const experiencePeriods: ExperiencePeriod[] = experience.map((exp) => ({
       id: uniqueId("periodid"),
       jobTitle: exp.title,
       employer: exp.organisation.name || "",
       city: exp.location,
-      startDate: {month: "", year: exp.dateStarted},
-      endDate: {month: "", year: exp.dateEnded !== "Present" ? exp.dateEnded : ""},
+      startDate: {
+        month: exp.timePeriod?.startedOn?.month?.toString() ?? "1",
+        year:
+          exp.timePeriod?.startOn?.year?.toString() ??
+          new Date().getFullYear().toString(),
+      },
+      endDate: {
+        month: exp.timePeriod?.endedOn?.month?.toString() ?? "1",
+        year:
+          exp.timePeriod?.endedOn?.year?.toString() ??
+          new Date().getFullYear().toString(),
+      },
       isCurrent: exp.dateEnded === "Present" ? true : false,
-      description: ""
+      description: "",
     }));
 
     const educationPeriods: EducationPeriod[] = education.map((edu) => ({
@@ -38,9 +48,19 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
       degree: edu.fieldOfStudy,
       school: edu.institutionName,
       description: "",
-      startDate: {month: "", year: edu.dateStarted}, //TODO
-      endDate: {month: "", year: edu.dateEnded},
-      isCurrent: false
+      startDate: {
+        month: edu.timePeriod?.startedOn?.month?.toString() ?? "1",
+        year:
+          edu.timePeriod?.startedOn?.year?.toString() ??
+          new Date().getFullYear().toString(),
+      },
+      endDate: {
+        month: edu.timePeriod?.endedOn?.month?.toString() ?? "1",
+        year:
+          edu.timePeriod?.endedOn?.year?.toString() ??
+          new Date().getFullYear().toString(),
+      },
+      isCurrent: false,
     }));
 
     const linkedinSkills: Skill[] = skills.map((skill) => ({
