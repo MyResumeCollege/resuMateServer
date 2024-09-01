@@ -27,18 +27,8 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
       jobTitle: exp.title,
       employer: exp.organisation.name || "",
       city: exp.location,
-      startDate: {
-        month: exp.timePeriod?.startedOn?.month?.toString() ?? "1",
-        year:
-          exp.timePeriod?.startOn?.year?.toString() ??
-          new Date().getFullYear().toString(),
-      },
-      endDate: {
-        month: exp.timePeriod?.endedOn?.month?.toString() ?? "1",
-        year:
-          exp.timePeriod?.endedOn?.year?.toString() ??
-          new Date().getFullYear().toString(),
-      },
+      startDate: {month: exp.timePeriod.startedOn.month ?? 1, year: exp.timePeriod.startOn.year ?? new Date().getFullYear()},
+      endDate: {month: exp.timePeriod.endedOn.month ?? 1, year: exp.timePeriod.endedOn.year ??  new Date().getFullYear()},
       isCurrent: exp.dateEnded === "Present" ? true : false,
       description: "",
     }));
@@ -48,19 +38,9 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
       degree: edu.fieldOfStudy,
       school: edu.institutionName,
       description: "",
-      startDate: {
-        month: edu.timePeriod?.startedOn?.month?.toString() ?? "1",
-        year:
-          edu.timePeriod?.startedOn?.year?.toString() ??
-          new Date().getFullYear().toString(),
-      },
-      endDate: {
-        month: edu.timePeriod?.endedOn?.month?.toString() ?? "1",
-        year:
-          edu.timePeriod?.endedOn?.year?.toString() ??
-          new Date().getFullYear().toString(),
-      },
-      isCurrent: false,
+      startDate: {month: edu.timePeriod.startedOn.month ?? 1, year: edu.timePeriod.startOn.year ?? new Date().getFullYear()},
+      endDate: {month: edu.timePeriod.endedOn.month ?? 1, year: edu.timePeriod.endedOn.year ??  new Date().getFullYear()},
+      isCurrent: false
     }));
 
     const linkedinSkills: Skill[] = skills.map((skill) => ({
