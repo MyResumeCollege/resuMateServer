@@ -16,7 +16,7 @@ export const downloadResume = async (req: Request, res: Response): Promise<void>
     });
 
     await page.evaluate(() => {
-      const classNamesToRemove = ['generate-section', 'translate']; // TODO remove toast
+      const classNamesToRemove = ['generate-section', 'translate'];
     
       classNamesToRemove.forEach(className => {
         const elements = document.getElementsByClassName(className);
