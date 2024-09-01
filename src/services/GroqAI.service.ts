@@ -85,8 +85,11 @@ const generateResume = async ({
         content: bioPrompt
       },
     ];
+
+    const validExperiences = experiences.filter(experience => experience.trim() !== "");
+    const validEducations = educations.filter(education => education.trim() !== "");
     
-    const requestMessagesExperiences: Groq.Chat.Completions.ChatCompletionMessageParam[][] = experiences.map((experience) => [
+    const requestMessagesExperiences: Groq.Chat.Completions.ChatCompletionMessageParam[][] = validExperiences.map((experience) => [
       {
         role: 'user',
         content: experience,
@@ -98,7 +101,7 @@ const generateResume = async ({
     ]);
     
 
-    const requestMessagesEducations: Groq.Chat.Completions.ChatCompletionMessageParam[][] = educations.map((education) => [
+    const requestMessagesEducations: Groq.Chat.Completions.ChatCompletionMessageParam[][] = validEducations.map((education) => [
       {
         role: "user",
         content: education
@@ -109,21 +112,20 @@ const generateResume = async ({
       },
     ])
 
-    const [bioResponse, experiencesResponse, educationsResponse] =
-      await Promise.all([
-        requestCompletion(requestMessagesBio),
-        Promise.all(requestMessagesExperiences.map(requestCompletion)),
-        Promise.all(requestMessagesEducations.map(requestCompletion)),
-      ]);
+    const [bioResponse, experiencesResponse, educationsResponse] = await Promise.all([
+      requestCompletion(requestMessagesBio),
+      requestMessagesExperiences.length > 0 ? Promise.all(requestMessagesExperiences.map(requestCompletion)) : Promise.resolve([]),
+      requestMessagesEducations.length > 0 ? Promise.all(requestMessagesEducations.map(requestCompletion)) : Promise.resolve([]),
+    ]);
 
     const bioRes = bioResponse.choices[0]?.message?.content || "";
-    const experiencesRes = experiencesResponse.map(
-      (response) => response.choices[0]?.message?.content || ""
-    );
+    const experiencesRes = requestMessagesExperiences.length > 0
+      ? experiencesResponse.map((response) => response.choices[0]?.message?.content || "")
+      : [""];
 
-    const educationsRes = educationsResponse.map(
-      (response) => response.choices[0]?.message?.content || ""
-    );        
+    const educationsRes = requestMessagesEducations.length > 0
+      ? educationsResponse.map((response) => response.choices[0]?.message?.content || "")
+      : [""];      
 
     return {
       bio: bioRes,
