@@ -22,7 +22,9 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
       experience,
     } = data;
 
-    const experiencePeriods: ExperiencePeriod[] = experience.map((exp) => ({
+    console.log("data ", data);
+    
+    const experiencePeriods: ExperiencePeriod[] = experience?.map((exp) => ({
       id: uniqueId("periodid"),
       jobTitle: exp.title,
       employer: exp.organisation.name || "",
@@ -33,7 +35,10 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
       description: "",
     }));
 
-    const educationPeriods: EducationPeriod[] = education.map((edu) => ({
+    console.log("experiencePeriods ", experiencePeriods);
+    
+
+    const educationPeriods: EducationPeriod[] = education?.map((edu) => ({
       id: uniqueId("periodid"),
       degree: edu.fieldOfStudy,
       school: edu.institutionName,
@@ -43,7 +48,7 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
       isCurrent: false
     }));
 
-    const linkedinSkills: Skill[] = skills.map((skill) => ({
+    const linkedinSkills: Skill[] = skills?.map((skill) => ({
       id: uniqueId("skillid"),
       name: skill.name,
       level: 3,
@@ -59,6 +64,7 @@ const fetchLinkedinProfileData = async (req: Request, res: Response) => {
 
     res.status(200).json(userLinkedinData);
   } catch (error) {
+    console.log(error)
     res.status(500).send(error.message);
   }
 };
